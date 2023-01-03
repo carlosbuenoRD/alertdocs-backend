@@ -12,6 +12,7 @@ import { AppController } from './app.controller';
 // Services
 import { AppService } from './app.service';
 import { AuthModule } from './api/auth/auth.module';
+import { FlujosModule } from './api/flujos/flujos.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AuthModule } from './api/auth/auth.module';
     UsersModule,
     AreasModule,
     AuthModule,
+    FlujosModule,
   ],
   controllers: [AppController],
   providers: [AppService],

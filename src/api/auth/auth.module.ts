@@ -5,7 +5,7 @@ import { PassportModule } from '@nestjs/passport';
 import { MongooseModule } from '@nestjs/mongoose';
 
 // CONSTANTS
-import { jwtConstants } from '@/constants';
+import { jwtConstants } from '@/utils/constants';
 
 // Schema
 import { User, UserSchema } from '@/schemas/users.schema';

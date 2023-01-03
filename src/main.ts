@@ -21,7 +21,10 @@ async function bootstrap() {
       'Api consumida por el proyecto de medicion de eficiencia alertdocs',
     )
     .setVersion('1.0')
-    .addTag('users')
+    .addTag('Users')
+    .addTag('Areas')
+    .addTag('Auth')
+    .addTag('Flujos')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
