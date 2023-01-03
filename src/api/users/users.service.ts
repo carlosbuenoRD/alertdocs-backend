@@ -59,8 +59,6 @@ export class UsersService {
   }
 
   async findByArea(id: string) {
-    console.log(id);
-
     try {
       const users = await this.user.find({ area: id, active: true });
       return users;

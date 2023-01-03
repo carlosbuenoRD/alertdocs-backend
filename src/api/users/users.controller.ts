@@ -8,11 +8,21 @@ import {
   Delete,
   HttpException,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
+// GUARD
+import { JwtAuthGuard } from '../auth/jwt.guard';
+
+// SERVICE
 import { UsersService } from './users.service';
+
+// DTO
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -26,6 +36,7 @@ export class UsersController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll() {
     try {

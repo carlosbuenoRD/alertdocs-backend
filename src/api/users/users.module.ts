@@ -7,8 +7,8 @@ import { HttpModule } from '@nestjs/axios';
 import { User, UserSchema } from '@/schemas/users.schema';
 
 // Controller
-import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
 
 @Module({
   imports: [
