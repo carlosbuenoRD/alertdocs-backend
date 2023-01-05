@@ -30,7 +30,13 @@ export class AuthService {
 
       let token: any = await this.jwt.sign({ id: user.id });
 
-      return { name: user.name, id: user.id, isAdmin: user.isAdmin, token };
+      return {
+        name: user.name,
+        id: user.id,
+        _id: user._id,
+        isAdmin: user.isAdmin,
+        token,
+      };
     } catch (error) {
       console.log(error.message);
       return error.message;

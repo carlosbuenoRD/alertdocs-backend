@@ -25,6 +25,7 @@ async function bootstrap() {
     .addTag('Areas')
     .addTag('Auth')
     .addTag('Flujos')
+    .addTag('Documents')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

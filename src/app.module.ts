@@ -13,6 +13,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './api/auth/auth.module';
 import { FlujosModule } from './api/flujos/flujos.module';
+import { DocumentsModule } from './api/documents/documents.module';
+import { ActivitiesModule } from './api/activities/activities.module';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { FlujosModule } from './api/flujos/flujos.module';
     AreasModule,
     AuthModule,
     FlujosModule,
+    DocumentsModule,
+    ActivitiesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
