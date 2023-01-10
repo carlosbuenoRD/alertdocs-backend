@@ -54,13 +54,13 @@ export class DocumentsController {
     }
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateDocumentDto: UpdateDocumentDto,
-  ) {
-    return this.documentsService.update(+id, updateDocumentDto);
-  }
+  // @Patch(':id')
+  // update(
+  //   @Param('id') id: string,
+  //   @Body() updateDocumentDto: UpdateDocumentDto,
+  // ) {
+  //   return this.documentsService.update(+id, updateDocumentDto);
+  // }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

@@ -83,29 +83,48 @@ export class ActivitiesService {
   }
 
   async findMyActitvities(id: string) {
-    return await this.activities.find({
-      usersId: id,
-    });
+    return await this.activities
+      .find({
+        usersId: id,
+      })
+      .populate('usersId');
   }
 
-  async startMyActivity(id: string, state: string) {
+  async changeActivityState(id: string, state: string) {
     let activity = await this.activities.findById(id);
+    console.log(state);
 
-    if (activity.step === 1) {
-      activity.state = state;
-      return await activity.save();
-    } else {
-      let pastActivity = await this.activities.findOne({
+    activity.state = state;
+
+    if (state === 'revision') {
+      // Changing current activity state
+      activity.endedAt = Date.now();
+
+      // Looking for next activity in document
+      const nextActivity = await this.activities.findOne({
         documentId: activity.documentId,
-        step: activity.step - 1,
+        step: activity.step + 1,
       });
-      pastActivity.state = StateEnum.completed;
-      activity.state = state;
 
-      await pastActivity.save();
-      await activity.save();
-      return;
+      if (nextActivity) {
+        // Changing next activity state
+        nextActivity.state = StateEnum.progress;
+        nextActivity.startedAt = Date.now();
+
+        // Saving changes of next activity
+        await nextActivity.save();
+      }
+    } else {
+      activity.startedAt = Date.now();
     }
+
+    await activity.save();
+  }
+
+  async updateActivityComments(id: string, comments: any) {
+    const activity = await this.activities.findById(id);
+    activity.comments.push(comments);
+    return await activity.save();
   }
 
   // async findHistory(id: string) {
@@ -128,12 +147,6 @@ export class ActivitiesService {
 
   // async update(id: string, updateActivityDto: UpdateActivityDto) {
   //   return await this.activity.findByIdAndUpdate(id, updateActivityDto);
-  // }
-
-  // async updateActivityComments(id: string, comments: string) {
-  //   const activity = await this.activities.findById(id);
-  //   activity.comments.push(comments);
-  //   return await activity.save();
   // }
 
   // async remove(id: string) {

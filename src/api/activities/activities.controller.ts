@@ -6,11 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  HttpException,
 } from '@nestjs/common';
 import { ActivitiesService } from './activities.service';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { UpdateActivityDto } from './dto/update-activity.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Activities')
 @Controller('activities')
 export class ActivitiesController {
   constructor(private readonly activitiesService: ActivitiesService) {}
@@ -51,6 +54,16 @@ export class ActivitiesController {
     @Param('document') document: string,
   ) {
     return this.activitiesService.findByDocumentAndArea(area, document);
+  }
+
+  @Patch('changestate/:id')
+  async changeActivityState(@Param('id') id: string, @Body() info: any) {
+    try {
+      return await this.activitiesService.changeActivityState(id, info.state);
+    } catch (error) {
+      console.log(error.message);
+      throw new HttpException(error.message, 500);
+    }
   }
 
   // @Patch(':id')

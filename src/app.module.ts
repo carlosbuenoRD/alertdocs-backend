@@ -15,6 +15,7 @@ import { AuthModule } from './api/auth/auth.module';
 import { FlujosModule } from './api/flujos/flujos.module';
 import { DocumentsModule } from './api/documents/documents.module';
 import { ActivitiesModule } from './api/activities/activities.module';
+import { CommentsModule } from './api/comments/comments.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ActivitiesModule } from './api/activities/activities.module';
     FlujosModule,
     DocumentsModule,
     ActivitiesModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

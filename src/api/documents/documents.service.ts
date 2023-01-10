@@ -32,6 +32,8 @@ export class DocumentsService {
         transcode: createDocumentDto.transcode,
       });
 
+      let createdActivities = [];
+
       // Loop for every activity and creating
       createDocumentDto.activities.forEach(async (i: IActivitiesDocument) => {
         try {
@@ -39,17 +41,18 @@ export class DocumentsService {
             i,
             createdDocument._id,
           );
-
-          // Adding created activity to the document
-          createdDocument.activities.push(activity._id);
-
-          // Saving the document
-          await createdDocument.save();
+          console.log(activity);
+          // Adding created activity to array
+          createdActivities.push(activity._id);
         } catch (error) {
           console.log(error.message);
           return error.message;
         }
       });
+
+      // Saving activities in the document
+      console.log(createdActivities);
+      await this.updateActivities(createdDocument._id, createdActivities);
     } catch (error) {
       console.log(error.message);
       return error.message;
@@ -89,8 +92,16 @@ export class DocumentsService {
     }
   }
 
-  update(id: number, updateDocumentDto: UpdateDocumentDto) {
-    return `This action updates a #${id} document`;
+  async updateActivities(id: any, activities: any) {
+    try {
+      const document = await this.documents.findById(id);
+
+      document.activities.push(activities);
+      await document.save();
+    } catch (error) {
+      console.log(error.message);
+      return error.message;
+    }
   }
 
   async remove(id: string) {
