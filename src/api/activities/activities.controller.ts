@@ -5,23 +5,29 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   HttpException,
+  UploadedFile,
+  UseInterceptors,
+  Request,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { saveFileStorage } from '@/utils/multerConfig';
+
+// GUARD
+import { JwtAuthGuard } from '../auth/jwt.guard';
+
+// Services
 import { ActivitiesService } from './activities.service';
+
+// DTOS
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { UpdateActivityDto } from './dto/update-activity.dto';
-import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Activities')
 @Controller('activities')
 export class ActivitiesController {
   constructor(private readonly activitiesService: ActivitiesService) {}
-
-  // @Post()
-  // create(@Body() createActivityDto: CreateActivityDto) {
-  //   return this.activitiesService.create(createActivityDto);
-  // }
 
   @Get()
   findAll() {
@@ -65,6 +71,17 @@ export class ActivitiesController {
       throw new HttpException(error.message, 500);
     }
   }
+
+  // @Post('upload/:id')
+  // @UseInterceptors(FileInterceptor('file', saveFileStorage))
+  // uploadFile(
+  //   @UploadedFile() file: Express.Multer.File,
+  //   @Param('id') id: string,
+  //   @Request() req,
+  // ) {
+
+  //   this.activitiesService.updateActivityFiles(id, file.filename);
+  // }
 
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateActivityDto: UpdateActivityDto) {

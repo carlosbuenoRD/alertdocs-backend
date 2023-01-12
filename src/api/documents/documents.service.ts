@@ -73,7 +73,9 @@ export class DocumentsService {
   // FIND BY ID
   async findOne(id: string) {
     try {
-      const document = await this.documents.findById(id);
+      const document = await this.documents
+        .findById(id)
+        .populate('participants');
       return document;
     } catch (error) {
       console.log(error.message);

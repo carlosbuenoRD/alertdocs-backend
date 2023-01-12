@@ -6,6 +6,7 @@ import { HydratedDocument } from 'mongoose';
 import { Flujo } from '@/schemas/flujos.schema';
 import { User } from '@/schemas/users.schema';
 import { Activity } from '@/schemas/activities.schema';
+import { Files } from './files.schema';
 
 export type DocumentsDoc = HydratedDocument<Document>;
 
@@ -28,6 +29,9 @@ export class Document {
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Flujo.name })
   flujoId: Flujo;
+
+  @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: Files.name }])
+  files: Files[];
 
   @Prop()
   startedAt: Date;

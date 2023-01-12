@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { MulterModule } from '@nestjs/platform-express/multer';
+import { join } from 'path';
 
 // SCHEMA
 import { Activity, ActivitySchema } from '@/schemas/activities.schema';
@@ -13,6 +15,9 @@ import { ActivitiesController } from './activities.controller';
     MongooseModule.forFeature([
       { name: Activity.name, schema: ActivitySchema },
     ]),
+    MulterModule.register({
+      dest: join(__dirname, '../../..', 'public/uploads'),
+    }),
   ],
   controllers: [ActivitiesController],
   providers: [ActivitiesService],

@@ -5,6 +5,7 @@ import mongoose, { HydratedDocument } from 'mongoose';
 import { User } from './users.schema';
 import { Document } from './documents.schema';
 import { Comment } from './comments.schema';
+import { Files } from './files.schema';
 
 export enum StateEnum {
   'pending' = 'pending',
@@ -46,6 +47,9 @@ export class Activity {
 
   @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: Comment.name }])
   comments: Comment[];
+
+  @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: Files.name }])
+  files: Files[];
 }
 
 export const ActivitySchema = SchemaFactory.createForClass(Activity);

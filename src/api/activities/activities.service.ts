@@ -56,7 +56,10 @@ export class ActivitiesService {
 
   async findByDocument(id: string) {
     try {
-      return await this.activities.find({ documentId: id }).populate('usersId');
+      return await this.activities
+        .find({ documentId: id })
+        .populate('usersId')
+        .populate('files');
     } catch (error) {
       console.log(error.message);
       return error.message;
@@ -74,7 +77,9 @@ export class ActivitiesService {
 
   async findOne(id: string) {
     try {
-      let activity = await this.activities.findById(id);
+      let activity = await (
+        await this.activities.findById(id)
+      ).populated('files');
       return activity;
     } catch (error) {
       console.log(error.message);
@@ -124,6 +129,12 @@ export class ActivitiesService {
   async updateActivityComments(id: string, comments: any) {
     const activity = await this.activities.findById(id);
     activity.comments.push(comments);
+    return await activity.save();
+  }
+
+  async updateActivityFiles(id: string, path: any) {
+    const activity = await this.activities.findById(id);
+    activity.files.push(path);
     return await activity.save();
   }
 
