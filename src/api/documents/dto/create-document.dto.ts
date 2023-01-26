@@ -21,6 +21,15 @@ export class CreateDocumentDto {
   flujoId: string;
 
   @ApiProperty()
+  areas: [string];
+
+  @ApiProperty()
+  direcciones: [string];
+
+  @ApiProperty()
+  departments: [string];
+
+  @ApiProperty()
   startedAt: Date;
 
   @ApiProperty()

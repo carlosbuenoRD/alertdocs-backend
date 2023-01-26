@@ -54,6 +54,24 @@ export class DocumentsController {
     }
   }
 
+  @Get('direccion/:id')
+  async findByDireccion(@Param('id') id: string) {
+    try {
+      return await this.documentsService.findByDireccion(id);
+    } catch (error) {
+      throw new HttpException(error.message, 500);
+    }
+  }
+
+  @Get('/department/:id')
+  async findByDepartment(@Param('id') id: string) {
+    try {
+      return await this.documentsService.findByDepartment(id);
+    } catch (error) {
+      throw new HttpException(error.message, 500);
+    }
+  }
+
   // @Patch(':id')
   // update(
   //   @Param('id') id: string,

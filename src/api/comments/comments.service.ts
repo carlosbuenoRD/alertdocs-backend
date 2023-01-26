@@ -39,7 +39,10 @@ export class CommentsService {
   // Find by activity
   async findByActivity(id: string) {
     try {
-      const comments = await this.comment.find({ activityId: id });
+      const comments = await this.comment
+        .find({ activityId: id })
+        .populate('userId', 'name')
+        .populate('activityId', 'step');
       return comments;
     } catch (error) {
       console.log(error.message);
@@ -52,7 +55,8 @@ export class CommentsService {
     try {
       const comments = await this.comment
         .find({ documentId: id })
-        .populate('userId', 'name');
+        .populate('userId', 'name')
+        .populate('activityId', 'step');
       return comments;
     } catch (error) {
       console.log(error.message);

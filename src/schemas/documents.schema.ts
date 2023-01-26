@@ -16,6 +16,15 @@ export class Document {
   transcode: string;
 
   @Prop()
+  areas: [string];
+
+  @Prop()
+  direcciones: [string];
+
+  @Prop()
+  departments: [string];
+
+  @Prop()
   libramiento: string;
 
   @Prop()
@@ -24,7 +33,7 @@ export class Document {
   @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: User.name }])
   participants: User[];
 
-  @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: 'activities' }])
+  @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }])
   activities: Activity[];
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Flujo.name })

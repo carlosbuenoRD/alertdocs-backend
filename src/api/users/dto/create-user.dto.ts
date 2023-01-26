@@ -14,6 +14,12 @@ export class CreateUserDto {
   area: string;
 
   @ApiProperty()
+  direccion: string;
+
+  @ApiProperty()
+  department: string;
+
+  @ApiProperty()
   cargo: string;
 
   @ApiProperty()

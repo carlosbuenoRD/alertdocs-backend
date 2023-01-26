@@ -1,28 +1,15 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
   HttpException,
-  UploadedFile,
-  UseInterceptors,
-  Request,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { saveFileStorage } from '@/utils/multerConfig';
-
-// GUARD
-import { JwtAuthGuard } from '../auth/jwt.guard';
 
 // Services
 import { ActivitiesService } from './activities.service';
-
-// DTOS
-import { CreateActivityDto } from './dto/create-activity.dto';
-import { UpdateActivityDto } from './dto/update-activity.dto';
 
 @ApiTags('Activities')
 @Controller('activities')
@@ -49,9 +36,24 @@ export class ActivitiesController {
     return this.activitiesService.findByArea(id);
   }
 
+  @Get('direccion/:id')
+  findByDireccion(@Param('id') id: string) {
+    return this.activitiesService.findByDireccion(id);
+  }
+
+  @Get('department/:id')
+  findByDepartment(@Param('id') id: string) {
+    return this.activitiesService.findByDepartment(id);
+  }
+
   @Get('document/:id')
   findByDocument(@Param('id') id: string) {
     return this.activitiesService.findByDocument(id);
+  }
+
+  @Get('/completed/document/:id')
+  findCompletedByDocument(@Param('id') id: string) {
+    return this.activitiesService.findCompletedByDocument(id);
   }
 
   @Get(':area/:document')

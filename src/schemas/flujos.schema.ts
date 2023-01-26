@@ -11,6 +11,12 @@ export class Flujo {
   @Prop()
   description: string;
 
+  @Prop()
+  areas: string[];
+
+  @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: User.name }])
+  participants: User[];
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
   createdBy: User;
 
@@ -18,6 +24,8 @@ export class Flujo {
     raw([
       {
         areaId: { type: String },
+        direccionId: { type: String },
+        departmentId: { type: String },
         description: { type: String },
         hours: { type: Number },
         step: { type: Number },

@@ -6,6 +6,12 @@ export class CreateFlujoDto {
   description: string;
 
   @ApiProperty()
+  areas: [string];
+
+  @ApiProperty()
+  participants: [string];
+
+  @ApiProperty()
   createdBy: string;
 
   @ApiProperty()

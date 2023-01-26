@@ -14,6 +14,7 @@ export class FlujosService {
   constructor(@InjectModel(Flujo.name) private flujos: Model<FlujoDocument>) {}
 
   async create(createFlujoDto: CreateFlujoDto) {
+    console.log(createFlujoDto);
     try {
       const createdFlujo = await this.flujos.create(createFlujoDto);
       return createdFlujo;
@@ -37,7 +38,8 @@ export class FlujosService {
     try {
       const flujo = await this.flujos
         .findById(id)
-        .populate('activitiesSchema.usersId');
+        .populate('activitiesSchema.usersId')
+        .populate('participants');
       return flujo;
     } catch (error) {
       console.log(error.message);

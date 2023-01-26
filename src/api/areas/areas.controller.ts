@@ -27,13 +27,33 @@ export class AreasController {
   }
 
   @Get()
-  findAll() {
-    return this.areasService.findAll();
+  findAllAreas() {
+    return this.areasService.findAllAreas();
+  }
+
+  @Get('direcciones/:id')
+  findAllDirecciones(@Param('id') id: string) {
+    return this.areasService.findAllDirecciones(id);
+  }
+
+  @Get('departments/:id')
+  findAllDeparments(@Param('id') id: string) {
+    return this.areasService.findAllDeparments(id);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.areasService.findOne(+id);
+    return this.areasService.findOne(id);
+  }
+
+  @Get('direccion/:id')
+  findOneDireccion(@Param('id') id: string) {
+    return this.areasService.findOneDireccion(id);
+  }
+
+  @Get('department/:id')
+  findOneDepartment(@Param('id') id: string) {
+    return this.areasService.findOneDepartment(id);
   }
 
   @Patch(':id')

@@ -15,6 +15,12 @@ export class User {
   area: string;
 
   @Prop()
+  direccion: string;
+
+  @Prop()
+  department: string;
+
+  @Prop()
   cargo: string;
 
   @Prop({ default: true })

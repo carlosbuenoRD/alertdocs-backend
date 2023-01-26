@@ -22,6 +22,12 @@ export class Activity {
   areaId: string;
 
   @Prop()
+  direccionId: string;
+
+  @Prop()
+  departmentId: string;
+
+  @Prop()
   description: string;
 
   @Prop()

@@ -54,12 +54,48 @@ export class ActivitiesService {
     }
   }
 
+  async findByDireccion(id: string) {
+    try {
+      return await this.activities.find({ direccionId: id });
+    } catch (error) {
+      console.log(error.message);
+      return error.message;
+    }
+  }
+
+  async findByDepartment(id: string) {
+    try {
+      return await this.activities.find({ departmentId: id });
+    } catch (error) {
+      console.log(error.message);
+      return error.message;
+    }
+  }
+
   async findByDocument(id: string) {
     try {
       return await this.activities
         .find({ documentId: id })
+        .sort({ step: 1 })
         .populate('usersId')
         .populate('files');
+    } catch (error) {
+      console.log(error.message);
+      return error.message;
+    }
+  }
+
+  async findCompletedByDocument(id: string) {
+    try {
+      const total = await this.activities.find({ documentId: id }).count();
+      const done = await this.activities
+        .find({ documentId: id, endedAt: { $exists: true } })
+        .count();
+
+      return {
+        total,
+        done,
+      };
     } catch (error) {
       console.log(error.message);
       return error.message;
@@ -77,9 +113,7 @@ export class ActivitiesService {
 
   async findOne(id: string) {
     try {
-      let activity = await (
-        await this.activities.findById(id)
-      ).populated('files');
+      let activity = await this.activities.findById(id);
       return activity;
     } catch (error) {
       console.log(error.message);
@@ -97,7 +131,6 @@ export class ActivitiesService {
 
   async changeActivityState(id: string, state: string) {
     let activity = await this.activities.findById(id);
-    console.log(state);
 
     activity.state = state;
 

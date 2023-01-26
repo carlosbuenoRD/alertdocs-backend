@@ -30,6 +30,9 @@ export class DocumentsService {
         libramiento: createDocumentDto.libramiento,
         participants: createDocumentDto.participants,
         transcode: createDocumentDto.transcode,
+        areas: createDocumentDto.areas,
+        direcciones: createDocumentDto.direcciones,
+        departments: createDocumentDto.departments,
       });
 
       let createdActivities = [];
@@ -41,7 +44,6 @@ export class DocumentsService {
             i,
             createdDocument._id,
           );
-          console.log(activity);
           // Adding created activity to array
           createdActivities.push(activity._id);
         } catch (error) {
@@ -51,7 +53,6 @@ export class DocumentsService {
       });
 
       // Saving activities in the document
-      console.log(createdActivities);
       await this.updateActivities(createdDocument._id, createdActivities);
     } catch (error) {
       console.log(error.message);
@@ -86,7 +87,38 @@ export class DocumentsService {
   // FIND BY AREA
   async findByArea(id: string) {
     try {
-      const documents = await this.documents.find({ areaId: id });
+      const documents = await this.documents
+        .find({ areas: { $in: id } })
+        .populate('participants');
+
+      return documents;
+    } catch (error) {
+      console.log(error.message);
+      return error.message;
+    }
+  }
+
+  // FIND BY Direccion
+  async findByDireccion(id: string) {
+    try {
+      const documents = await this.documents.find({
+        direcciones: { $in: id },
+      });
+
+      return documents;
+    } catch (error) {
+      console.log(error.message);
+      return error.message;
+    }
+  }
+
+  // FIND BY Department
+  async findByDepartment(id: string) {
+    try {
+      const documents = await this.documents.find({
+        departments: { $in: id },
+      });
+
       return documents;
     } catch (error) {
       console.log(error.message);

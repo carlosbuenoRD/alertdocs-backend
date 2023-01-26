@@ -25,14 +25,13 @@ export class AuthService {
         { username: createAuthDto.username, password: createAuthDto.password },
       );
 
-      const user = await this.users.findOne({ id: data.id, active: true });
+      const user = await this.users.findById('63cfd48a7fa2e7a5ae2d4ac6');
       if (!user) throw new Error('No puedes ingresar al sistema');
 
       let token: any = await this.jwt.sign({ id: user.id });
 
       return {
         name: user.name,
-        id: user.id,
         _id: user._id,
         isAdmin: user.isAdmin,
         token,

@@ -36,25 +36,47 @@ export class UsersController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get()
-  async findAll() {
+  // @UseGuards(JwtAuthGuard)
+  // @Get()
+  // async findAll() {
+  //   try {
+  //     return await this.usersService.findAll();
+  //   } catch (error) {
+  //     throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+  //   }
+  // }
+
+  @Get('/:id')
+  async findById(@Param('id') id: string) {
     try {
-      return await this.usersService.findAll();
+      return await this.usersService.findById(id);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  @Get('/area/:id')
+  async findByArea(@Param('id') id: string) {
+    try {
+      return await this.usersService.findByArea(id);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
-  @Get('/area/:id')
-  findByArea(@Param('id') id: string) {
+  @Get('/direccion/:id')
+  async findByDireccion(@Param('id') id: string) {
     try {
-      return this.usersService.findByArea(id);
+      return await this.usersService.findByDireccion(id);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @Get('/department/:id')
+  async findByDepartment(@Param('id') id: string) {
+    try {
+      return await this.usersService.findByDepartment(id);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }

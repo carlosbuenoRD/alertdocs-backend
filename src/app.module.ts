@@ -19,6 +19,7 @@ import { DocumentsModule } from './api/documents/documents.module';
 import { ActivitiesModule } from './api/activities/activities.module';
 import { CommentsModule } from './api/comments/comments.module';
 import { FilesModule } from './api/files/files.module';
+import { HistoryModule } from './api/history/history.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { FilesModule } from './api/files/files.module';
     ActivitiesModule,
     CommentsModule,
     FilesModule,
+    HistoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
