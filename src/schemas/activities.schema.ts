@@ -45,6 +45,15 @@ export class Activity {
   @Prop()
   endedAt: number;
 
+  @Prop()
+  pauseByDevolucion: number;
+
+  @Prop()
+  continueByDevolucion: number;
+
+  @Prop({ default: 0 })
+  devolucionTime: number;
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Document.name })
   documentId: Document;
 

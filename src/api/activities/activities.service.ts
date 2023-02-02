@@ -38,7 +38,7 @@ export class ActivitiesService {
 
   async findOneActivity(id: string) {
     try {
-      return await this.activities.findById(id);
+      return await this.activities.findById(id).populate('usersId');
     } catch (error) {
       console.log(error.message);
       return error.message;
@@ -96,6 +96,20 @@ export class ActivitiesService {
         total,
         done,
       };
+    } catch (error) {
+      console.log(error.message);
+      return error.message;
+    }
+  }
+
+  async findCompletedByArea(id: string) {
+    try {
+      // const total = await this.activities.find({ areaId: id }).count();
+      const total = await this.activities
+        .find({ areaId: id, endedAt: { $exists: true } })
+        .count();
+
+      return total;
     } catch (error) {
       console.log(error.message);
       return error.message;

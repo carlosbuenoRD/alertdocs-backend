@@ -56,6 +56,11 @@ export class ActivitiesController {
     return this.activitiesService.findCompletedByDocument(id);
   }
 
+  @Get('/completed/area/:id')
+  findCompletedByArea(@Param('id') id: string) {
+    return this.activitiesService.findCompletedByArea(id);
+  }
+
   @Get(':area/:document')
   findByDocumentAndArea(
     @Param('area') area: string,
