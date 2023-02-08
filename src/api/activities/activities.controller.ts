@@ -69,6 +69,22 @@ export class ActivitiesController {
     return this.activitiesService.findByDocumentAndArea(area, document);
   }
 
+  @Get('/flujo/:flujo/:user')
+  findByUserAndFlujo(
+    @Param('flujo') flujo: string,
+    @Param('user') user: string,
+  ) {
+    return this.activitiesService.findByUserAndFlujo(flujo, user);
+  }
+
+  @Get('/area/:flujo/:area')
+  findByAreaAndFlujo(
+    @Param('flujo') flujo: string,
+    @Param('area') area: string,
+  ) {
+    return this.activitiesService.findByAreaAndFlujo(flujo, area);
+  }
+
   @Patch('changestate/:id')
   async changeActivityState(@Param('id') id: string, @Body() info: any) {
     try {

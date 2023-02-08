@@ -3,6 +3,7 @@ import mongoose, { HydratedDocument } from 'mongoose';
 
 // Models
 import { User } from './users.schema';
+import { Areas } from './areas.schema';
 
 export type FlujoDocument = HydratedDocument<Flujo>;
 
@@ -11,8 +12,8 @@ export class Flujo {
   @Prop()
   description: string;
 
-  @Prop()
-  areas: string[];
+  @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: Areas.name }])
+  areas: Areas[];
 
   @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: User.name }])
   participants: User[];

@@ -18,12 +18,17 @@ export class ActivitiesService {
     @InjectModel(Activity.name) private activities: Model<ActivityDocument>,
   ) {}
 
-  async create(activity: IActivitiesDocument, documentId: any) {
+  async create(
+    activity: IActivitiesDocument,
+    documentId: any,
+    flujoId: string,
+  ) {
     try {
       const createdActivity = await this.activities.create({
         ...activity,
         usersId: activity.usersId[0],
         documentId,
+        flujoId,
       });
       return createdActivity;
     } catch (error) {
@@ -79,6 +84,24 @@ export class ActivitiesService {
         .sort({ step: 1 })
         .populate('usersId')
         .populate('files');
+    } catch (error) {
+      console.log(error.message);
+      return error.message;
+    }
+  }
+
+  async findByUserAndFlujo(flujo: string, user: string) {
+    try {
+      return await this.activities.find({ flujoId: flujo, usersId: user });
+    } catch (error) {
+      console.log(error.message);
+      return error.message;
+    }
+  }
+
+  async findByAreaAndFlujo(flujo: string, area: string) {
+    try {
+      return await this.activities.find({ flujoId: flujo, areaId: area });
     } catch (error) {
       console.log(error.message);
       return error.message;

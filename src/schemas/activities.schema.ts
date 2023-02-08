@@ -6,6 +6,7 @@ import { User } from './users.schema';
 import { Document } from './documents.schema';
 import { Comment } from './comments.schema';
 import { Files } from './files.schema';
+import { Flujo } from './flujos.schema';
 
 export enum StateEnum {
   'pending' = 'pending',
@@ -56,6 +57,9 @@ export class Activity {
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Document.name })
   documentId: Document;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Flujo.name })
+  flujoId: Flujo;
 
   @Prop({ default: StateEnum.pending })
   state: string;

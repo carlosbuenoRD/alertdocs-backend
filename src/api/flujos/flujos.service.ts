@@ -39,7 +39,8 @@ export class FlujosService {
       const flujo = await this.flujos
         .findById(id)
         .populate('activitiesSchema.usersId')
-        .populate('participants');
+        .populate('participants')
+        .populate('areas');
       return flujo;
     } catch (error) {
       console.log(error.message);

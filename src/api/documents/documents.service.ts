@@ -43,6 +43,7 @@ export class DocumentsService {
           const activity = await this.activityService.create(
             i,
             createdDocument._id,
+            createDocumentDto.flujoId,
           );
           // Adding created activity to array
           createdActivities.push(activity._id);
