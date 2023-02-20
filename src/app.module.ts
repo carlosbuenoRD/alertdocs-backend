@@ -21,6 +21,7 @@ import { CommentsModule } from './api/comments/comments.module';
 import { FilesModule } from './api/files/files.module';
 import { HistoryModule } from './api/history/history.module';
 import { DevolucionesModule } from './api/devoluciones/devoluciones.module';
+import { ReportsModule } from './api/reports/reports.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { DevolucionesModule } from './api/devoluciones/devoluciones.module';
     FilesModule,
     HistoryModule,
     DevolucionesModule,
+    ReportsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

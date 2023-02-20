@@ -16,7 +16,7 @@ import { DevolucionesService } from './devoluciones.service';
 
 // DTO
 import { CreateDevolucioneDto } from './dto/create-devolucione.dto';
-import { UpdateDevolucioneDto } from './dto/update-devolucione.dto';
+// import { UpdateDevolucioneDto } from './dto/update-devolucione.dto';
 
 @ApiTags('Devoluciones')
 @Controller('devoluciones')
@@ -72,10 +72,7 @@ export class DevolucionesController {
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateDevolucioneDto: UpdateDevolucioneDto,
-  ) {
+  update(@Param('id') id: string, @Body() updateDevolucioneDto: any) {
     return this.devolucionesService.update(+id, updateDevolucioneDto);
   }
 

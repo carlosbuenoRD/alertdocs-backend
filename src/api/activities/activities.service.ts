@@ -11,11 +11,14 @@ import {
 
 // INTERFACE
 import { IActivitiesDocument } from '@/interfaces/activities.interface';
+import { ReportsService } from '../reports/reports.service';
+import { getEficiencia } from '@/utils/formula';
 
 @Injectable()
 export class ActivitiesService {
   constructor(
     @InjectModel(Activity.name) private activities: Model<ActivityDocument>,
+    private reports: ReportsService,
   ) {}
 
   async create(
@@ -174,6 +177,23 @@ export class ActivitiesService {
     if (state === 'revision') {
       // Changing current activity state
       activity.endedAt = Date.now();
+      await activity.save();
+
+      // Looking for existing report
+      const report = await this.reports.findByArea(activity.areaId);
+
+      // If exist adding activity info
+      if (report) {
+        await this.reports.update(report._id, activity, 'activity');
+      } else {
+        // If not exist creating report and adding activity info
+        await this.reports.create({
+          activities: [activity._id],
+          activitiesTime: activity.endedAt - activity.startedAt,
+          activitiesEficiencia: getEficiencia([activity]),
+          areaId: activity.areaId,
+        });
+      }
 
       // Looking for next activity in document
       const nextActivity = await this.activities.findOne({
@@ -191,9 +211,8 @@ export class ActivitiesService {
       }
     } else {
       activity.startedAt = Date.now();
+      await activity.save();
     }
-
-    await activity.save();
   }
 
   async updateActivityComments(id: string, comments: any) {

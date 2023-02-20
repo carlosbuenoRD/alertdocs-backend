@@ -9,6 +9,7 @@ import { Activity, ActivitySchema } from '@/schemas/activities.schema';
 // CONTROLLER
 import { ActivitiesService } from './activities.service';
 import { ActivitiesController } from './activities.controller';
+import { ReportsModule } from '../reports/reports.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ActivitiesController } from './activities.controller';
     MulterModule.register({
       dest: join(__dirname, '../../..', 'public/uploads'),
     }),
+    ReportsModule,
   ],
   controllers: [ActivitiesController],
   providers: [ActivitiesService],

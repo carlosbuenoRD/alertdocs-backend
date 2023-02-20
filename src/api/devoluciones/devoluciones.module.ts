@@ -8,6 +8,7 @@ import { Activity, ActivitySchema } from '@/schemas/activities.schema';
 //
 import { DevolucionesService } from './devoluciones.service';
 import { DevolucionesController } from './devoluciones.controller';
+import { ReportsModule } from './../reports/reports.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { DevolucionesController } from './devoluciones.controller';
       { name: Devolucion.name, schema: DevolucionSchema },
       { name: Activity.name, schema: ActivitySchema },
     ]),
+    ReportsModule,
   ],
   controllers: [DevolucionesController],
   providers: [DevolucionesService],

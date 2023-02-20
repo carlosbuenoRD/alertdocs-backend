@@ -8,13 +8,15 @@ import { Activity, ActivityDocument } from '@/schemas/activities.schema';
 
 // DTO
 import { CreateDevolucioneDto } from './dto/create-devolucione.dto';
-import { UpdateDevolucioneDto } from './dto/update-devolucione.dto';
+import { ReportsService } from '../reports/reports.service';
+// import { UpdateDevolucioneDto } from './dto/update-devolucione.dto';
 
 @Injectable()
 export class DevolucionesService {
   constructor(
     @InjectModel(Devolucion.name) private devolucion: Model<DevolucionDoc>,
     @InjectModel(Activity.name) private activity: Model<ActivityDocument>,
+    private reports: ReportsService,
   ) {}
 
   async create(createDevolucioneDto: CreateDevolucioneDto) {
@@ -115,28 +117,50 @@ export class DevolucionesService {
 
   async endDevolucion(id: string) {
     try {
+      // Looking for devolucion and adding ended time
       const devolucion = await this.devolucion.findById(id);
       devolucion.endedAt = Date.now();
 
+      await devolucion.save();
+
+      // Looking for activity to and adding the devolucion time
       const activityTo = await this.activity.findById(devolucion.activityTo);
       activityTo.devolucionTime += devolucion.endedAt - devolucion.startedAt;
 
+      // looking for activity from and adding the time the devolucion over
       const activityFrom = await this.activity.findById(
         devolucion.activityFrom,
       );
-
       activityFrom.continueByDevolucion = Date.now();
+
+      // REPORT
+      // Looking for exisiting report
+      const report = await this.reports.findByArea(devolucion.area);
+
+      // If exist adding activity info
+      if (report) {
+        console.log(devolucion, 1);
+
+        await this.reports.update(report._id, devolucion, 'devolucion');
+      } else {
+        console.log(devolucion, 2);
+        // If not exist creating report and adding devolucion info
+        await this.reports.create({
+          devoluciones: [devolucion._id],
+          devolucionesTime: devolucion.endedAt - devolucion.startedAt,
+          areaId: devolucion.area,
+        });
+      }
 
       await activityFrom.save();
       await activityTo.save();
-      await devolucion.save();
     } catch (error) {
       console.log(error.message);
       return error.message;
     }
   }
 
-  update(id: number, updateDevolucionDto: UpdateDevolucioneDto) {
+  update(id: number, updateDevolucionDto: any) {
     return `This action updates a #${id} devolucion`;
   }
 
