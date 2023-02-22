@@ -33,7 +33,9 @@ export class Document {
   @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: User.name }])
   participants: User[];
 
-  @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }])
+  @Prop([
+    { type: mongoose.Schema.Types.ObjectId, ref: 'Activity', default: [] },
+  ])
   activities: Activity[];
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Flujo.name })

@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 
 // Schema
 import { Report, ReportDocument } from '@/schemas/reports.schema';
+import { Activity, ActivityDocument } from '@/schemas/activities.schema';
 
 // DTOS
 import { CreateReportDto } from './dto/create-report.dto';
 import { UpdateReportDto } from './dto/update-report.dto';
 import { addingTypeReportDto } from './dto/adding-type.dto';
 import { getEficiencia } from '@/utils/formula';
+import { CreateDocumentDto } from './../documents/dto/create-document.dto';
 
 @Injectable()
 export class ReportsService {
@@ -58,7 +60,10 @@ export class ReportsService {
 
   async findOne(id: string) {
     try {
-      let report = await this.report.findById(id).populate('areaId', 'name');
+      let report = await this.report
+        .findById(id)
+        .populate('areaId', 'name')
+        .populate('procesos.proceso', 'description');
       return report;
     } catch (error) {
       console.log(error.message);
@@ -66,14 +71,15 @@ export class ReportsService {
     }
   }
 
-  async findByArea(id: string) {
+  async findByArea(id: string): Promise<ReportDocument> {
     try {
       let report = await this.report
         .findOne({
           areaId: id,
           ...this.dateQuery,
         })
-        .populate('areaId', 'name');
+        .populate('areaId', 'name')
+        .populate('procesos.proceso', 'description');
       return report;
     } catch (error) {
       console.log(error.message);
@@ -81,7 +87,58 @@ export class ReportsService {
     }
   }
 
-  async update(id: string, item: any, type: string) {
+  async handleActivityReport(activity: ActivityDocument): Promise<void> {
+    try {
+      // Looking for existing report
+      const areaReport = await this.findByArea(activity.areaId);
+      // const userReport = await this.findByUser(activity.usersId);
+
+      // If exist adding activity info
+      if (areaReport) {
+        await this.update(`${areaReport._id}`, activity, 'activity');
+      } else {
+        // If not exist creating report and adding activity info
+        await this.create({
+          activities: [activity._id],
+          activitiesTime: activity.endedAt - activity.startedAt,
+          activitiesEficiencia: getEficiencia([activity]),
+          areaId: activity.areaId,
+        });
+      }
+
+      // if (userReport) {
+      //   await this.update(`${userReport._id}`, activity, 'activity');
+      // } else {
+      //   // If not exist creating report and adding activity info
+      //   await this.create({
+      //     activities: [activity._id],
+      //     activitiesTime: activity.endedAt - activity.startedAt,
+      //     activitiesEficiencia: getEficiencia([activity]),
+      //     user: activity.usersId,
+      //   });
+      // }
+    } catch (error) {
+      console.log(error.message, 'handleActivityReport');
+      return error.message;
+    }
+  }
+
+  async findByUser(id: any): Promise<ReportDocument> {
+    try {
+      let report = await this.report
+        .findOne({
+          user: id,
+          ...this.dateQuery,
+        })
+        .populate('user', 'name');
+      return report;
+    } catch (error) {
+      console.log(error.message, 'findByUser');
+      return error.message;
+    }
+  }
+
+  async update(id: any, item: any, type: string) {
     try {
       let report = await this.report.findById(id);
 
@@ -92,6 +149,7 @@ export class ReportsService {
         report.activitiesEficiencia += eficiencia;
         this.chooseActivityType(report, eficiencia, item);
       }
+
       if (type === 'devolucion') {
         report.devoluciones.push(item._id);
         report.devolucionesTime += item.endedAt - item.startedAt;
@@ -109,6 +167,54 @@ export class ReportsService {
     if (eficiencia > 120) report.goodActivities.push(item);
     if (eficiencia > 99 && eficiencia < 120) report.mediumActivities.push(item);
     if (eficiencia < 100) report.badActivities.push(item);
+  }
+
+  async handleReportProceso(proceso: CreateDocumentDto) {
+    try {
+      let report: ReportDocument;
+      proceso.areas.map(async (a) => {
+        report = await this.findByArea(a);
+
+        // CHECK IF EXIST
+        if (report === null) {
+          // IF NOT CREATE REPORT
+          console.log(3);
+          report = await this.create({
+            areaId: a,
+            procesos: [{ proceso: proceso.flujoId, qty: 1 }],
+          });
+          console.log(4);
+
+          return;
+        }
+
+        // CHECK IF THE PROPERTY PROCESOS EXIST
+        if (report?.procesos) {
+          let exist = report?.procesos?.filter(
+            (p: any) => p.proceso._id == proceso.flujoId,
+          )[0];
+          console.log(exist, 'exist');
+
+          if (exist) {
+            console.log(5);
+            let newProcesos = report.procesos.map((p: any) =>
+              p.proceso._id == proceso.flujoId ? { ...p, qty: p.qty + 1 } : p,
+            );
+
+            console.log(6);
+            report.procesos = [...newProcesos];
+          } else {
+            report.procesos.push({ proceso: proceso.flujoId, qty: 1 });
+          }
+          console.log(7);
+          await report.save();
+          console.log(8);
+        }
+      });
+    } catch (error) {
+      console.log(error.message, 'handleReportProceso');
+      return error;
+    }
   }
 
   async getReportOfTheMonth(): Promise<any> {

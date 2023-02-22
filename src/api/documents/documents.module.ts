@@ -9,6 +9,7 @@ import { Activity, ActivitySchema } from '@/schemas/activities.schema';
 // CONTROLLER
 import { DocumentsService } from './documents.service';
 import { DocumentsController } from './documents.controller';
+import { ReportsModule } from '../reports/reports.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { DocumentsController } from './documents.controller';
       { name: Activity.name, schema: ActivitySchema },
     ]),
     ActivitiesModule,
+    ReportsModule,
   ],
   controllers: [DocumentsController],
   providers: [DocumentsService],

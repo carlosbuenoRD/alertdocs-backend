@@ -1,10 +1,11 @@
-import { Schema, SchemaFactory, Prop } from '@nestjs/mongoose';
+import { Schema, SchemaFactory, Prop, raw } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 
 import { User } from './users.schema';
 import { Activity } from './activities.schema';
 import { Devolucion } from './devoluciones.schema';
 import { Areas } from '@/schemas/areas.schema';
+import { Flujo } from '@/schemas/flujos.schema';
 
 export type ReportDocument = HydratedDocument<Report>;
 
@@ -25,6 +26,20 @@ export class Report {
   @Prop({ default: 0 })
   activitiesEficiencia: number;
 
+  @Prop(
+    raw([
+      {
+        proceso: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: Flujo.name,
+        },
+        qty: { type: Number, default: 1 },
+        eficiencia: { type: Number, require: false },
+      },
+    ]),
+  )
+  procesos: any[];
+
   @Prop({ default: 0 })
   activitiesTime: number;
 
@@ -38,7 +53,7 @@ export class Report {
   user: User;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Areas.name })
-  areaId: string;
+  areaId: Areas;
 
   @Prop()
   direccionId: string;

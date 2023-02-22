@@ -13,12 +13,14 @@ import { CreateDocumentDto } from './dto/create-document.dto';
 import { UpdateDocumentDto } from './dto/update-document.dto';
 import { IActivitiesDocument } from '@/interfaces/activities.interface';
 import { Activity } from '@/schemas/activities.schema';
+import { ReportsService } from '../reports/reports.service';
 
 @Injectable()
 export class DocumentsService {
   constructor(
     @InjectModel(Document.name) private documents: Model<DocumentsDoc>,
     private activityService: ActivitiesService,
+    private reportService: ReportsService,
   ) {}
 
   // CREATE A DOCUMENT
@@ -37,6 +39,9 @@ export class DocumentsService {
 
       let createdActivities = [];
 
+      // Saving document in its report
+      await this.reportService.handleReportProceso(createDocumentDto);
+
       // Loop for every activity and creating
       createDocumentDto.activities.forEach(async (i: IActivitiesDocument) => {
         try {
@@ -48,7 +53,7 @@ export class DocumentsService {
           // Adding created activity to array
           createdActivities.push(activity._id);
         } catch (error) {
-          console.log(error.message);
+          console.log(error.message, 'DOCUMENT: create activity');
           return error.message;
         }
       });
@@ -56,7 +61,7 @@ export class DocumentsService {
       // Saving activities in the document
       await this.updateActivities(createdDocument._id, createdActivities);
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message, 'DOCUMENT: create');
       return error.message;
     }
   }
@@ -67,7 +72,7 @@ export class DocumentsService {
       const documents = await this.documents.find();
       return documents;
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message, 'DOCUMENT: find all');
       return error.message;
     }
   }
@@ -80,7 +85,7 @@ export class DocumentsService {
         .populate('participants');
       return document;
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message, 'DOCUMENT: find one');
       return error.message;
     }
   }
@@ -94,7 +99,7 @@ export class DocumentsService {
 
       return documents;
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message, 'DOCUMENT: by area');
       return error.message;
     }
   }
@@ -108,7 +113,7 @@ export class DocumentsService {
 
       return documents;
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message, 'DOCUMENT: by direccion');
       return error.message;
     }
   }
@@ -122,7 +127,7 @@ export class DocumentsService {
 
       return documents;
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message, 'DOCUMENT: by department');
       return error.message;
     }
   }
@@ -134,7 +139,7 @@ export class DocumentsService {
       document.activities.push(activities);
       await document.save();
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message, 'DOCUMENT: udpdate activities');
       return error.message;
     }
   }
@@ -144,7 +149,7 @@ export class DocumentsService {
       const document = await this.documents.findByIdAndDelete(id);
       return document;
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message, 'DOCUMENT: remove');
       return error.message;
     }
   }

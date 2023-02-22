@@ -35,7 +35,7 @@ export class ActivitiesService {
       });
       return createdActivity;
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message, 'ACTIVITY create');
       return error.message;
     }
   }
@@ -48,7 +48,7 @@ export class ActivitiesService {
     try {
       return await this.activities.findById(id).populate('usersId');
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message, 'ACTIVITY find all');
       return error.message;
     }
   }
@@ -57,7 +57,7 @@ export class ActivitiesService {
     try {
       return await this.activities.find({ areaId: id });
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message, 'ACTIVITY, find by area');
       return error.message;
     }
   }
@@ -66,7 +66,7 @@ export class ActivitiesService {
     try {
       return await this.activities.find({ direccionId: id });
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message, 'ACTIVITY by direccion');
       return error.message;
     }
   }
@@ -75,7 +75,7 @@ export class ActivitiesService {
     try {
       return await this.activities.find({ departmentId: id });
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message, 'ACTIVITY by department');
       return error.message;
     }
   }
@@ -88,7 +88,7 @@ export class ActivitiesService {
         .populate('usersId')
         .populate('files');
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message, 'ACTIVITY by document');
       return error.message;
     }
   }
@@ -97,7 +97,7 @@ export class ActivitiesService {
     try {
       return await this.activities.find({ flujoId: flujo, usersId: user });
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message, 'ACTIVITY by user and flujo');
       return error.message;
     }
   }
@@ -106,12 +106,12 @@ export class ActivitiesService {
     try {
       return await this.activities.find({ flujoId: flujo, areaId: area });
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message, 'ACTIVITY area and flujo');
       return error.message;
     }
   }
 
-  async findCompletedByDocument(id: string) {
+  async findCompletedByDocument(id: any) {
     try {
       const total = await this.activities.find({ documentId: id }).count();
       const done = await this.activities
@@ -123,7 +123,7 @@ export class ActivitiesService {
         done,
       };
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message, 'ACTIVITY completedByDocument');
       return error.message;
     }
   }
@@ -137,7 +137,7 @@ export class ActivitiesService {
 
       return total;
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message, 'ACTIVITY completedByArea');
       return error.message;
     }
   }
@@ -146,7 +146,7 @@ export class ActivitiesService {
     try {
       return await this.activities.find({ documentId: document, areaId: area });
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message, 'ACTIVITY document&area');
       return error.message;
     }
   }
@@ -156,7 +156,7 @@ export class ActivitiesService {
       let activity = await this.activities.findById(id);
       return activity;
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message, 'ACTIVITY findone');
       return error.message;
     }
   }
@@ -179,21 +179,8 @@ export class ActivitiesService {
       activity.endedAt = Date.now();
       await activity.save();
 
-      // Looking for existing report
-      const report = await this.reports.findByArea(activity.areaId);
-
-      // If exist adding activity info
-      if (report) {
-        await this.reports.update(report._id, activity, 'activity');
-      } else {
-        // If not exist creating report and adding activity info
-        await this.reports.create({
-          activities: [activity._id],
-          activitiesTime: activity.endedAt - activity.startedAt,
-          activitiesEficiencia: getEficiencia([activity]),
-          areaId: activity.areaId,
-        });
-      }
+      //Handling report data
+      await this.reports.handleActivityReport(activity);
 
       // Looking for next activity in document
       const nextActivity = await this.activities.findOne({
@@ -226,6 +213,21 @@ export class ActivitiesService {
     activity.files.push(path);
     return await activity.save();
   }
+
+  // async isLastActivity(activity: Activity): Promise<boolean> {
+  //   try {
+  //     const answer = await this.activities.findOne({
+  //       step: activity.step + 1,
+  //       flujoId: activity.flujoId,
+  //       documentId: activity.documentId,
+  //     });
+
+  //     answer ? false : true;
+  //   } catch (error: any) {
+  //     console.log(error.message, 'isLastActivity?');
+  //     return error.message;
+  //   }
+  // }
 
   // async findHistory(id: string) {
   //   let activity = await this.activities.findById(id);
