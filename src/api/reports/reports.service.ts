@@ -226,7 +226,32 @@ export class ReportsService {
 
       return report[0];
     } catch (error) {
-      console.log(error, 'ppp');
+      console.log(error, 'getReportOfTheMonth');
+      return error;
+    }
+  }
+
+  async getMepydDetails(): Promise<any> {
+    try {
+      let reports = await this.report.find(this.dateQuery);
+
+      return {
+        eficiencia: reports.reduce(
+          (prev, acc) =>
+            prev + acc.activitiesEficiencia / acc.activities.length,
+          0,
+        ),
+        completed: reports.reduce(
+          (prev, acc) => acc.activities.length + prev,
+          0,
+        ),
+        devoluciones: reports.reduce(
+          (prev, acc) => acc.devoluciones.length + prev,
+          0,
+        ),
+      };
+    } catch (error) {
+      console.log(error, 'getMepydDetails');
       return error;
     }
   }

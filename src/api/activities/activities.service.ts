@@ -12,8 +12,6 @@ import {
 // INTERFACE
 import { IActivitiesDocument } from '@/interfaces/activities.interface';
 import { ReportsService } from '../reports/reports.service';
-import { HistoryService } from '../history/history.service';
-import { getEficiencia } from '@/utils/formula';
 
 @Injectable()
 export class ActivitiesService {

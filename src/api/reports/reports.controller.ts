@@ -52,6 +52,15 @@ export class ReportsController {
     }
   }
 
+  @Get('month/mepyd')
+  async getMepydDetails() {
+    try {
+      return this.reportsService.getMepydDetails();
+    } catch (error) {
+      throw new HttpException(error.message, 500);
+    }
+  }
+
   @Patch(':id/:type')
   update(
     @Param('id') id: string,
