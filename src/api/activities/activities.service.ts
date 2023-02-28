@@ -12,6 +12,7 @@ import {
 // INTERFACE
 import { IActivitiesDocument } from '@/interfaces/activities.interface';
 import { ReportsService } from '../reports/reports.service';
+import { HistoryService } from '../history/history.service';
 import { getEficiencia } from '@/utils/formula';
 
 @Injectable()
@@ -170,35 +171,59 @@ export class ActivitiesService {
   }
 
   async changeActivityState(id: string, state: string) {
-    let activity = await this.activities.findById(id);
+    try {
+      let activity = await this.activities.findById(id);
 
-    activity.state = state;
+      activity.state = state;
 
-    if (state === 'revision') {
-      // Changing current activity state
-      activity.endedAt = Date.now();
-      await activity.save();
+      if (state === 'revision') {
+        // Changing current activity state
+        activity.endedAt = Date.now();
+        await activity.save();
 
-      //Handling report data
-      await this.reports.handleActivityReport(activity);
+        //Handling report data
+        await this.reports.handleActivityReport(activity);
 
-      // Looking for next activity in document
-      const nextActivity = await this.activities.findOne({
-        documentId: activity.documentId,
-        step: activity.step + 1,
-      });
+        // Looking for next activity in document
+        const nextActivity = await this.activities.findOne({
+          documentId: activity.documentId,
+          step: activity.step + 1,
+        });
 
-      if (nextActivity) {
-        // Changing next activity state
-        nextActivity.state = StateEnum.progress;
-        nextActivity.startedAt = Date.now();
+        if (nextActivity) {
+          // Changing next activity state
+          nextActivity.state = StateEnum.ready;
+          // await this.history.create({
+          //   userId: `${nextActivity.usersId}`,
+          //   action: 'Tarea lista para empezar!',
+          //   activityId: `${nextActivity._id}`,
+          //   documentId: `${nextActivity.documentId}`,
+          //   step: nextActivity.step,
+          // });
 
-        // Saving changes of next activity
-        await nextActivity.save();
+          // Saving changes of next activity
+          await nextActivity.save();
+        } else {
+          activity.state = StateEnum.completed;
+          await activity.save();
+        }
+
+        // Looking for past activity in document
+        const pastActivity = await this.activities.findOne({
+          documentId: activity.documentId,
+          step: activity.step - 1,
+        });
+
+        pastActivity.state = StateEnum.completed;
+
+        await pastActivity.save();
+      } else {
+        activity.startedAt = Date.now();
+        activity.state = StateEnum.progress;
+        await activity.save();
       }
-    } else {
-      activity.startedAt = Date.now();
-      await activity.save();
+    } catch (error) {
+      console.log(error.message, 'Change state');
     }
   }
 

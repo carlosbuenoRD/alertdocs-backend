@@ -6,8 +6,8 @@ import { ActivitiesModule } from '../activities/activities.module';
 import { History, HistorySchema } from '@/schemas/history.schema';
 
 // CONTROLLER
-import { HistoryService } from './history.service';
 import { HistoryController } from './history.controller';
+import { HistoryService } from './history.service';
 
 @Module({
   imports: [

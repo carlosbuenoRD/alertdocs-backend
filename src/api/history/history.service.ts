@@ -72,7 +72,7 @@ export class HistoryService {
 
       const histories = await this.history
         .find({
-          documentId: activity.documentId,
+          documentId: id,
           step: { $lt: activity.step + 1 },
         })
         .sort({ step: -1 });

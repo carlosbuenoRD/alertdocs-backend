@@ -4,7 +4,11 @@ import { Model } from 'mongoose';
 
 // DB
 import { DevolucionDoc, Devolucion } from '@/schemas/devoluciones.schema';
-import { Activity, ActivityDocument } from '@/schemas/activities.schema';
+import {
+  Activity,
+  ActivityDocument,
+  StateEnum,
+} from '@/schemas/activities.schema';
 
 // DTO
 import { CreateDevolucioneDto } from './dto/create-devolucione.dto';
@@ -38,8 +42,11 @@ export class DevolucionesService {
       const activityFrom = await this.activity.findById(
         createDevolucioneDto.activityFrom,
       );
-      activityFrom.pauseByDevolucion = Date.now();
-      await activityFrom.save();
+
+      if (activityFrom.state !== StateEnum.ready) {
+        activityFrom.pauseByDevolucion = Date.now();
+        await activityFrom.save();
+      }
 
       return newDevoluvion;
     } catch (error) {
@@ -131,7 +138,11 @@ export class DevolucionesService {
       const activityFrom = await this.activity.findById(
         devolucion.activityFrom,
       );
-      activityFrom.continueByDevolucion = Date.now();
+
+      if (activityFrom.state !== StateEnum.ready) {
+        activityFrom.continueByDevolucion = Date.now();
+        await activityFrom.save();
+      }
 
       // REPORT
       // Looking for exisiting report
@@ -139,11 +150,8 @@ export class DevolucionesService {
 
       // If exist adding activity info
       if (report) {
-        console.log(devolucion, 1);
-
         await this.reports.update(report._id, devolucion, 'devolucion');
       } else {
-        console.log(devolucion, 2);
         // If not exist creating report and adding devolucion info
         await this.reports.create({
           devoluciones: [devolucion._id],
@@ -152,7 +160,6 @@ export class DevolucionesService {
         });
       }
 
-      await activityFrom.save();
       await activityTo.save();
     } catch (error) {
       console.log(error.message);

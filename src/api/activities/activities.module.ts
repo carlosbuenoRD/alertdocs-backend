@@ -7,9 +7,9 @@ import { join } from 'path';
 import { Activity, ActivitySchema } from '@/schemas/activities.schema';
 
 // CONTROLLER
-import { ActivitiesService } from './activities.service';
-import { ActivitiesController } from './activities.controller';
 import { ReportsModule } from '../reports/reports.module';
+import { ActivitiesController } from './activities.controller';
+import { ActivitiesService } from './activities.service';
 
 @Module({
   imports: [
