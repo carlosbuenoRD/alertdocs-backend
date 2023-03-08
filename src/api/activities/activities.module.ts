@@ -5,6 +5,7 @@ import { join } from 'path';
 
 // SCHEMA
 import { Activity, ActivitySchema } from '@/schemas/activities.schema';
+import { Document, DocumentsSchema } from '@/schemas/documents.schema';
 
 // CONTROLLER
 import { ReportsModule } from '../reports/reports.module';
@@ -15,6 +16,7 @@ import { ActivitiesService } from './activities.service';
   imports: [
     MongooseModule.forFeature([
       { name: Activity.name, schema: ActivitySchema },
+      { name: Document.name, schema: DocumentsSchema },
     ]),
     MulterModule.register({
       dest: join(__dirname, '../../..', 'public/uploads'),

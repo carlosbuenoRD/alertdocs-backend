@@ -8,6 +8,7 @@ import {
   ActivityDocument,
   StateEnum,
 } from '@/schemas/activities.schema';
+import { Document, DocumentsDoc } from '@/schemas/documents.schema';
 
 // INTERFACE
 import { IActivitiesDocument } from '@/interfaces/activities.interface';
@@ -17,6 +18,7 @@ import { ReportsService } from '../reports/reports.service';
 export class ActivitiesService {
   constructor(
     @InjectModel(Activity.name) private activities: Model<ActivityDocument>,
+    @InjectModel(Document.name) private documents: Model<DocumentsDoc>,
     private reports: ReportsService,
   ) {}
 
@@ -205,6 +207,11 @@ export class ActivitiesService {
           await nextActivity.save();
         } else {
           activity.state = StateEnum.completed;
+
+          const document = await this.documents.findById(activity.documentId);
+          document.endedAt = Date.now();
+
+          await document.save();
           await activity.save();
         }
 

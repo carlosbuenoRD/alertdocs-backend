@@ -45,10 +45,10 @@ export class Document {
   files: Files[];
 
   @Prop()
-  startedAt: Date;
+  startedAt: number;
 
   @Prop()
-  endedAt: Date;
+  endedAt: number;
 }
 
 export const DocumentsSchema = SchemaFactory.createForClass(Document);
