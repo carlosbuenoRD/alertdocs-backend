@@ -287,10 +287,24 @@ export class ReportsService {
       let report = await this.report
         .findById(id)
         .sort({ activitiesEficiencia: -1 })
-        .populate('activities')
-        .populate('goodActivities')
-        .populate('badActivities')
-        .populate('mediumActivities')
+        .populate([
+          {
+            path: 'activities',
+            populate: ['usersId', 'documentId'],
+          },
+          {
+            path: 'goodActivities',
+            populate: ['usersId', 'documentId'],
+          },
+          {
+            path: 'badActivities',
+            populate: ['usersId', 'documentId'],
+          },
+          {
+            path: 'mediumActivities',
+            populate: ['usersId', 'documentId'],
+          },
+        ])
         .select('activities goodActivities mediumActivities badActivities');
 
       return report;
