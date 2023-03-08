@@ -71,6 +71,32 @@ export class ReportsService {
     }
   }
 
+  async findByDate(month: number, year: number) {
+    try {
+      let report = await this.report
+        .find({ month, year })
+        .populate('areaId', 'name')
+        .populate('procesos.proceso', 'description');
+      return report;
+    } catch (error) {
+      console.log(error.message);
+      return error.message;
+    }
+  }
+
+  async findByAreaAndDate(area: string, month: number, year: number) {
+    try {
+      let report = await this.report
+        .findOne({ areaId: area, month, year })
+        .populate('areaId', 'name')
+        .populate('procesos.proceso', 'description');
+      return report;
+    } catch (error) {
+      console.log(error.message);
+      return error.message;
+    }
+  }
+
   async findByArea(id: string): Promise<ReportDocument> {
     try {
       let report = await this.report
@@ -252,6 +278,24 @@ export class ReportsService {
       };
     } catch (error) {
       console.log(error, 'getMepydDetails');
+      return error;
+    }
+  }
+
+  async getReportActivities(id: string): Promise<any> {
+    try {
+      let report = await this.report
+        .findById(id)
+        .sort({ activitiesEficiencia: -1 })
+        .populate('activities')
+        .populate('goodActivities')
+        .populate('badActivities')
+        .populate('mediumActivities')
+        .select('activities goodActivities mediumActivities badActivities');
+
+      return report;
+    } catch (error) {
+      console.log(error, 'getReportOfTheMonth');
       return error;
     }
   }

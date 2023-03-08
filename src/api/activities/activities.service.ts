@@ -61,6 +61,15 @@ export class ActivitiesService {
     }
   }
 
+  async findByFlujo(id: string) {
+    try {
+      return await this.activities.find({ flujoId: id });
+    } catch (error) {
+      console.log(error.message, 'ACTIVITY, find by area');
+      return error.message;
+    }
+  }
+
   async findByDireccion(id: string) {
     try {
       return await this.activities.find({ direccionId: id });
@@ -152,7 +161,7 @@ export class ActivitiesService {
 
   async findOne(id: string) {
     try {
-      let activity = await this.activities.findById(id);
+      let activity = await this.activities.findById(id).populate('usersId');
       return activity;
     } catch (error) {
       console.log(error.message, 'ACTIVITY findone');
@@ -191,13 +200,6 @@ export class ActivitiesService {
         if (nextActivity) {
           // Changing next activity state
           nextActivity.state = StateEnum.ready;
-          // await this.history.create({
-          //   userId: `${nextActivity.usersId}`,
-          //   action: 'Tarea lista para empezar!',
-          //   activityId: `${nextActivity._id}`,
-          //   documentId: `${nextActivity.documentId}`,
-          //   step: nextActivity.step,
-          // });
 
           // Saving changes of next activity
           await nextActivity.save();

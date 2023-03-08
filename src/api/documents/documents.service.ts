@@ -94,7 +94,7 @@ export class DocumentsService {
   async findByArea(id: string) {
     try {
       const documents = await this.documents
-        .find({ areas: { $in: id } })
+        .find({ areas: { $in: id }, endedAt: { $exists: false } })
         .populate('participants');
 
       return documents;

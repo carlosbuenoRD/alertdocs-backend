@@ -6,6 +6,7 @@ import {
   HttpException,
   Param,
   Patch,
+  Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { addingTypeReportDto } from './dto/adding-type.dto';
@@ -43,10 +44,43 @@ export class ReportsController {
     }
   }
 
+  @Get('activities/:id')
+  async findReportActivities(@Param('id') id: string) {
+    try {
+      return this.reportsService.getReportActivities(id);
+    } catch (error) {
+      throw new HttpException(error.message, 500);
+    }
+  }
+
   @Get('month/top1')
   async getReportOfTheMonth() {
     try {
       return this.reportsService.getReportOfTheMonth();
+    } catch (error) {
+      throw new HttpException(error.message, 500);
+    }
+  }
+
+  @Get('by/date')
+  async getReportByDate(
+    @Query('month') month: number,
+    @Query('year') year: number,
+  ) {
+    try {
+      return this.reportsService.findByDate(month, year);
+    } catch (error) {
+      throw new HttpException(error.message, 500);
+    }
+  }
+  @Get('by/area/date')
+  async getReportByAreaAndDate(
+    @Query('area') area: string,
+    @Query('month') month: number,
+    @Query('year') year: number,
+  ) {
+    try {
+      return this.reportsService.findByAreaAndDate(area, month, year);
     } catch (error) {
       throw new HttpException(error.message, 500);
     }

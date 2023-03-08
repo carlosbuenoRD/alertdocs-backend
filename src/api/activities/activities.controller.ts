@@ -31,6 +31,11 @@ export class ActivitiesController {
     return this.activitiesService.findMyActitvities(id);
   }
 
+  @Get('flujo/:id')
+  findByFlujo(@Param('id') id: string) {
+    return this.activitiesService.findByFlujo(id);
+  }
+
   @Get('area/:id')
   findByArea(@Param('id') id: string) {
     return this.activitiesService.findByArea(id);
