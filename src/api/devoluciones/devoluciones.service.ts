@@ -75,8 +75,10 @@ export class DevolucionesService {
     try {
       const devolucion = await this.devolucion
         .find({ activityTo: id })
-        .populate('userFrom')
-        .populate('activityFrom');
+        .populate('activityTo')
+        .populate('userTo')
+        .populate('activityFrom')
+        .populate('userFrom');
       return devolucion;
     } catch (error) {
       return error.message;
@@ -88,8 +90,10 @@ export class DevolucionesService {
     try {
       const devolucion = await this.devolucion
         .find({ area: id })
-        .populate('userFrom')
-        .populate('activityFrom');
+        .populate('activityTo')
+        .populate('userTo')
+        .populate('activityFrom')
+        .populate('userFrom');
       return devolucion;
     } catch (error) {
       return error.message;
@@ -101,8 +105,10 @@ export class DevolucionesService {
     try {
       const devolucion = await this.devolucion
         .find({ direccion: id })
-        .populate('userFrom')
-        .populate('activityFrom');
+        .populate('activityTo')
+        .populate('userTo')
+        .populate('activityFrom')
+        .populate('userFrom');
       return devolucion;
     } catch (error) {
       return error.message;
@@ -114,8 +120,10 @@ export class DevolucionesService {
     try {
       const devolucion = await this.devolucion
         .find({ department: id })
-        .populate('userFrom')
-        .populate('activityFrom');
+        .populate('activityTo')
+        .populate('userTo')
+        .populate('activityFrom')
+        .populate('userFrom');
       return devolucion;
     } catch (error) {
       return error.message;

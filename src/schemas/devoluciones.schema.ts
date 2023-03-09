@@ -12,8 +12,8 @@ export class Devolucion {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Activity.name })
   activityFrom: Activity;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
-  activityTo: User;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Activity.name })
+  activityTo: Activity;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
   userFrom: User;
