@@ -314,6 +314,24 @@ export class ReportsService {
     }
   }
 
+  async getReportDevoluciones(id: string): Promise<any> {
+    try {
+      let report = await this.report
+        .findById(id)
+        .sort({ activitiesEficiencia: -1 })
+        .populate({
+          path: 'devoluciones',
+          populate: ['userFrom', 'userTo', 'activityFrom', 'activityTo'],
+        })
+        .select('devoluciones');
+
+      return report;
+    } catch (error) {
+      console.log(error, 'getReportOfTheMonth');
+      return error;
+    }
+  }
+
   remove(id: number) {
     return `This action removes a #${id} report`;
   }

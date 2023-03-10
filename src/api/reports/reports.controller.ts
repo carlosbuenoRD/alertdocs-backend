@@ -53,6 +53,15 @@ export class ReportsController {
     }
   }
 
+  @Get('devoluciones/:id')
+  async findReportDevoluciones(@Param('id') id: string) {
+    try {
+      return this.reportsService.getReportDevoluciones(id);
+    } catch (error) {
+      throw new HttpException(error.message, 500);
+    }
+  }
+
   @Get('month/top1')
   async getReportOfTheMonth() {
     try {
