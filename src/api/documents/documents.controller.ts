@@ -72,6 +72,33 @@ export class DocumentsController {
     }
   }
 
+  @Get('completed/area/:id')
+  async findCompletedByArea(@Param('id') id: string) {
+    try {
+      return await this.documentsService.findCompletedByArea(id);
+    } catch (error) {
+      throw new HttpException(error.message, 500);
+    }
+  }
+
+  @Get('completed/direccion/:id')
+  async findCompletedByDireccion(@Param('id') id: string) {
+    try {
+      return await this.documentsService.findCompletedByDireccion(id);
+    } catch (error) {
+      throw new HttpException(error.message, 500);
+    }
+  }
+
+  @Get('completed//department/:id')
+  async findCompletedByDepartment(@Param('id') id: string) {
+    try {
+      return await this.documentsService.findCompletedByDepartment(id);
+    } catch (error) {
+      throw new HttpException(error.message, 500);
+    }
+  }
+
   // @Patch(':id')
   // update(
   //   @Param('id') id: string,

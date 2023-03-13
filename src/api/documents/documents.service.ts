@@ -109,6 +109,7 @@ export class DocumentsService {
     try {
       const documents = await this.documents.find({
         direcciones: { $in: id },
+        endedAt: { $exists: false },
       });
 
       return documents;
@@ -123,6 +124,51 @@ export class DocumentsService {
     try {
       const documents = await this.documents.find({
         departments: { $in: id },
+        endedAt: { $exists: false },
+      });
+
+      return documents;
+    } catch (error) {
+      console.log(error.message, 'DOCUMENT: by department');
+      return error.message;
+    }
+  }
+
+  // FIND COMPLETED BY AREA
+  async findCompletedByArea(id: string) {
+    try {
+      const documents = await this.documents
+        .find({ areas: { $in: id }, endedAt: { $exists: true } })
+        .populate('participants');
+
+      return documents;
+    } catch (error) {
+      console.log(error.message, 'DOCUMENT: by area');
+      return error.message;
+    }
+  }
+
+  // FIND COMPLETED BY Direccion
+  async findCompletedByDireccion(id: string) {
+    try {
+      const documents = await this.documents.find({
+        direcciones: { $in: id },
+        endedAt: { $exists: true },
+      });
+
+      return documents;
+    } catch (error) {
+      console.log(error.message, 'DOCUMENT: by direccion');
+      return error.message;
+    }
+  }
+
+  // FIND COMPLETED BY Department
+  async findCompletedByDepartment(id: string) {
+    try {
+      const documents = await this.documents.find({
+        departments: { $in: id },
+        endedAt: { $exists: true },
       });
 
       return documents;
