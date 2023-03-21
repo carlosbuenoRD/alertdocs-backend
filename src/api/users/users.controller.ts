@@ -46,6 +46,15 @@ export class UsersController {
   //   }
   // }
 
+  @Get()
+  async findAll() {
+    try {
+      return await this.usersService.findAll();
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   @Get('/:id')
   async findById(@Param('id') id: string) {
     try {

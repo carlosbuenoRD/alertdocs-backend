@@ -23,6 +23,9 @@ import { HistoryModule } from './api/history/history.module';
 import { DevolucionesModule } from './api/devoluciones/devoluciones.module';
 import { ReportsModule } from './api/reports/reports.module';
 
+// Gateways
+import { KanbaGateway, NotifyGateway } from './gateways';
+
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb://localhost:27017/alertdocs'),
@@ -42,6 +45,6 @@ import { ReportsModule } from './api/reports/reports.module';
     ReportsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, KanbaGateway, NotifyGateway],
 })
 export class AppModule {}

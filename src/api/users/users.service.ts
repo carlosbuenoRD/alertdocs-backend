@@ -99,6 +99,15 @@ export class UsersService {
   //   }
   // }
 
+  async findAll() {
+    try {
+      const user = await this.user.find();
+      return user;
+    } catch (error) {
+      return error.message;
+    }
+  }
+
   async findById(id: string) {
     try {
       const user = await this.user.findById(id);
