@@ -16,14 +16,14 @@ export class AuthService {
     private axios: HttpService,
     private jwt: JwtService,
     @InjectModel(User.name) private users: Model<UserDocument>,
-  ) {}
+  ) { }
 
   async login(createAuthDto: CreateAuthDto) {
     try {
-      const { data } = await this.axios.axiosRef.post(
-        'https://localhost:7197/api/login',
-        { username: createAuthDto.username, password: createAuthDto.password },
-      );
+      // const { data } = await this.axios.axiosRef.post(
+      //   'https://localhost:7197/api/login',
+      //   { username: createAuthDto.username, password: createAuthDto.password },
+      // );
       let user;
       if (createAuthDto.password === '1') {
         user = await this.users.findById('63cfd48a7fa2e7a5ae2d4ac6');

@@ -17,8 +17,7 @@ import { Server, Socket } from 'socket.io';
   },
 })
 export class NotifyGateway
-  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
-{
+  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   @WebSocketServer() server: Server;
 
   afterInit(server: any) {
@@ -35,6 +34,7 @@ export class NotifyGateway
 
   @SubscribeMessage('setup')
   handleSetup(@ConnectedSocket() client: Socket, @MessageBody() user: string) {
+    console.log('Setup user: ', user)
     client.join(user);
   }
 
@@ -59,7 +59,14 @@ export class NotifyGateway
     @ConnectedSocket() client: Socket,
     @MessageBody() user: string,
   ) {
-    console.log('devolucion created', user);
     client.in(user).emit('devolucion created');
+  }
+
+  @SubscribeMessage('notify devolucion ended')
+  handleEndedDevolucion(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() user: string,
+  ) {
+    client.in(user).emit('devolucion ended');
   }
 }
