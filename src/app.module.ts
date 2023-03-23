@@ -26,9 +26,12 @@ import { ReportsModule } from './api/reports/reports.module';
 // Gateways
 import { KanbaGateway, NotifyGateway } from './gateways';
 
+let CLUSTER =
+  'mongodb+srv://bloodysi:bloodysi@atlascluster.fohieyx.mongodb.net/?retryWrites=true&w=majority';
+
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017/alertdocs'),
+    MongooseModule.forRoot(CLUSTER),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
