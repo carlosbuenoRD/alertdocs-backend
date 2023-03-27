@@ -24,14 +24,17 @@ import { DevolucionesModule } from './api/devoluciones/devoluciones.module';
 import { ReportsModule } from './api/reports/reports.module';
 
 // Gateways
-import { KanbaGateway, NotifyGateway } from './gateways';
+import { KanbaGateway } from './gateways';
+import { NotificationsModule } from './gateways/notifications/notifications.module';
+import { ChatsModule } from './api/chats/chats.module';
 
 let CLUSTER =
-  'mongodb+srv://bloodysi:bloodysi@atlascluster.fohieyx.mongodb.net/?retryWrites=true&w=majority';
+  // 'mongodb+srv://bloodysi:bloodysi@atlascluster.fohieyx.mongodb.net/?retryWrites=true&w=majority';
+  'mongodb://localhost:27017/alertdocs';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(CLUSTER),
+    MongooseModule.forRoot(process.env.MONGO_URL || CLUSTER),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
@@ -46,8 +49,10 @@ let CLUSTER =
     HistoryModule,
     DevolucionesModule,
     ReportsModule,
+    NotificationsModule,
+    ChatsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, KanbaGateway, NotifyGateway],
+  providers: [AppService, KanbaGateway],
 })
-export class AppModule {}
+export class AppModule { }

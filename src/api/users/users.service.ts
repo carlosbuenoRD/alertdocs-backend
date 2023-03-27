@@ -9,6 +9,7 @@ import { User, UserDocument } from '@/schemas/users.schema';
 // DTOS
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { NotificationsService } from '@/gateways/notifications/notifications.service';
 
 let options = [
   {
@@ -47,8 +48,8 @@ let options = [
 export class UsersService {
   constructor(
     @InjectModel(User.name) private user: Model<UserDocument>,
-    private readonly axios: HttpService,
-  ) {}
+    private notificationsService: NotificationsService
+  ) { }
 
   async create(createUserDto: CreateUserDto) {
     try {
@@ -138,6 +139,16 @@ export class UsersService {
     try {
       const users = await this.user.find({ department });
       return users;
+    } catch (error) {
+      return error.message;
+    }
+  }
+
+  // NOTIFICATIONS
+  async getNotifications(user: string) {
+    try {
+      const notifications = await this.notificationsService.findAll(user)
+      return notifications;
     } catch (error) {
       return error.message;
     }

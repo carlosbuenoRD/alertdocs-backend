@@ -25,7 +25,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
@@ -86,6 +86,15 @@ export class UsersController {
   async findByDepartment(@Param('id') id: string) {
     try {
       return await this.usersService.findByDepartment(id);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @Get('/notifications/:id')
+  async findNotifications(@Param('id') id: string) {
+    try {
+      return await this.usersService.getNotifications(id);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
