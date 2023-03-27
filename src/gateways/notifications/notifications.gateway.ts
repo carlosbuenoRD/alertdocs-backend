@@ -10,13 +10,13 @@ import { Server, Socket } from 'socket.io';
 
 import { NotificationsService } from './notifications.service';
 
-@WebSocketGateway(81, {
+@WebSocketGateway(1081, {
   cors: {
     origin: '*',
   },
 })
 export class NotificationsGateway {
-  constructor(private readonly notificationsService: NotificationsService) { }
+  constructor(private readonly notificationsService: NotificationsService) {}
 
   @WebSocketServer() server: Server;
 
@@ -34,7 +34,7 @@ export class NotificationsGateway {
 
   @SubscribeMessage('setup')
   handleSetup(@ConnectedSocket() client: Socket, @MessageBody() user: string) {
-    console.log('Setup user: ', user)
+    console.log('Setup user: ', user);
     client.join(user);
   }
 
@@ -51,7 +51,11 @@ export class NotificationsGateway {
     @ConnectedSocket() client: Socket,
     @MessageBody() user: string,
   ) {
-    await this.notificationsService.create({ user, message: 'Tu actividad esta lista para empezar', from: 'me' })
+    await this.notificationsService.create({
+      user,
+      message: 'Tu actividad esta lista para empezar',
+      from: 'me',
+    });
     client.in(user).emit('ready activity');
   }
 
@@ -60,7 +64,11 @@ export class NotificationsGateway {
     @ConnectedSocket() client: Socket,
     @MessageBody() user: string,
   ) {
-    await this.notificationsService.create({ user, message: 'Has recibido una devolucion', from: 'me' })
+    await this.notificationsService.create({
+      user,
+      message: 'Has recibido una devolucion',
+      from: 'me',
+    });
     client.in(user).emit('devolucion created');
   }
 
@@ -69,23 +77,28 @@ export class NotificationsGateway {
     @ConnectedSocket() client: Socket,
     @MessageBody() user: string,
   ) {
-    await this.notificationsService.create({ user, message: 'Devolucion terminada puedes continuar', from: 'me' })
+    await this.notificationsService.create({
+      user,
+      message: 'Devolucion terminada puedes continuar',
+      from: 'me',
+    });
     client.in(user).emit('devolucion ended');
   }
 
   @SubscribeMessage('create document')
   async handleCreateDocument(
     @ConnectedSocket() client: Socket,
-    @MessageBody() document
+    @MessageBody() document,
   ) {
-    this.server.emit('created document')
+    this.server.emit('created document');
     try {
-      await this.notificationsService.addDocumentParticipants(document.participants)
-      this.server.in(document.participants).emit('notify created document')
+      await this.notificationsService.addDocumentParticipants(
+        document.participants,
+      );
+      this.server.in(document.participants).emit('notify created document');
     } catch (error) {
-      console.log(error.message, 'NOTIYF CREATE DOCUMENT')
+      console.log(error.message, 'NOTIYF CREATE DOCUMENT');
     }
-
   }
 
   @SubscribeMessage('load data')
@@ -94,7 +107,7 @@ export class NotificationsGateway {
   }
 
   @SubscribeMessage('logout')
-  handlelogout(@ConnectedSocket() client: Socket,) {
-    client.disconnect()
+  handlelogout(@ConnectedSocket() client: Socket) {
+    client.disconnect();
   }
 }
