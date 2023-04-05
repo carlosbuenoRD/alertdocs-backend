@@ -1,4 +1,5 @@
 import { Activity } from '@/schemas/activities.schema';
+import { Document } from '@/schemas/documents.schema';
 import {
   ConnectedSocket,
   MessageBody,
@@ -26,15 +27,16 @@ export class KanbaGateway
   }
 
   handleConnection(client: any, ...args: any[]) {
-    console.log('User connected to kanba socket');
+    // console.log('User connected to kanba socket');
   }
 
   handleDisconnect(client: any) {
-    console.log('ALguien se fue de kanba socket! chao chao');
+    // console.log('ALguien se fue de kanba socket! chao chao');
   }
 
   @SubscribeMessage('setup')
   handleSetup(@ConnectedSocket() client: Socket, @MessageBody() user: string) {
+    console.log('KANBA USER CONNECTED: ', user);
     client.join(user);
   }
 
@@ -49,8 +51,11 @@ export class KanbaGateway
   @SubscribeMessage('change activity')
   handleChangeActivity(
     @ConnectedSocket() client: Socket,
-    @MessageBody() activity: Activity,
+    @MessageBody() document: any,
   ) {
-    client.in(String(activity.documentId)).emit('changed activity', activity);
+    client.in(String(document._id)).emit('changed activity', document._id);
+    this.server
+      .in(document.participants.map((u) => u._id))
+      .emit('changed activity', document._id);
   }
 }

@@ -1,39 +1,53 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
   Patch,
-  Param,
-  Delete,
+  Controller,
+  Post,
+  Request,
+  UseGuards,
+  Get,
 } from '@nestjs/common';
+
+import { JwtAuthGuard } from '../auth/jwt.guard';
+
+// DTOS
 import { ChatsService } from './chats.service';
 import { CreateChatDto } from './dto/create-chat.dto';
-import { UpdateChatDto } from './dto/update-chat.dto';
 
+@UseGuards(JwtAuthGuard)
 @Controller('chats')
 export class ChatsController {
   constructor(private readonly chatsService: ChatsService) {}
 
-  // @Post()
-  // create(@Body() createChatDto: CreateChatDto) {
-  //   return this.chatsService.accessChat(createChatDto);
-  // }
+  @Post()
+  create(@Request() req) {
+    return this.chatsService.accessChat(req);
+  }
 
-  // @Get()
-  // findAll() {
-  //   return this.chatsService.findAll();
-  // }
+  @Post('/group')
+  createGroup(@Request() req) {
+    return this.chatsService.createGroupChat(req);
+  }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.chatsService.findOne(+id);
-  // }
+  @Get()
+  findAll(@Request() req) {
+    return this.chatsService.getAllChats(req);
+  }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateChatDto: UpdateChatDto) {
-  //   return this.chatsService.update(+id, updateChatDto);
-  // }
+  @Patch('/group/rename:id')
+  renameGroup(@Request() req) {
+    return this.chatsService.renameGroupChat(req);
+  }
+
+  @Patch('/group/add/:id')
+  addToGroup(@Request() req) {
+    return this.chatsService.addToGroup(req);
+  }
+
+  @Patch('/group/remove/:id')
+  removeFromGroup(@Request() req) {
+    return this.chatsService.removeFromGroup(req);
+  }
 
   // @Delete(':id')
   // remove(@Param('id') id: string) {

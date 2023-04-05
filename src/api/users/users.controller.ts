@@ -1,5 +1,6 @@
 import {
   Controller,
+  Request,
   Get,
   Post,
   Body,
@@ -9,6 +10,7 @@ import {
   HttpException,
   HttpStatus,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -22,10 +24,11 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
+@UseGuards(JwtAuthGuard)
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
@@ -36,18 +39,10 @@ export class UsersController {
     }
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Get()
-  // async findAll() {
-  //   try {
-  //     return await this.usersService.findAll();
-  //   } catch (error) {
-  //     throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
-  //   }
-  // }
-
   @Get()
-  async findAll() {
+  async findAll(@Request() req) {
+    console.log('User: ', req.user);
+
     try {
       return await this.usersService.findAll();
     } catch (error) {
@@ -59,6 +54,15 @@ export class UsersController {
   async findById(@Param('id') id: string) {
     try {
       return await this.usersService.findById(id);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @Get('/find/search')
+  async findBySearch(@Query() query) {
+    try {
+      return await this.usersService.findBySearch(query.search);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }

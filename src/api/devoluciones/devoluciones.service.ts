@@ -70,6 +70,21 @@ export class DevolucionesService {
     }
   }
 
+  // By User
+  async findByUser(id: string) {
+    try {
+      const devolucion = await this.devolucion
+        .find({ userTo: id, endedAt: { $exists: false } })
+        .populate('activityTo')
+        .populate('userTo')
+        .populate('activityFrom')
+        .populate('userFrom');
+      return devolucion;
+    } catch (error) {
+      return error.message;
+    }
+  }
+
   // By Activity
   async findByActivity(id: string) {
     try {

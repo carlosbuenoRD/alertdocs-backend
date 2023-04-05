@@ -48,8 +48,8 @@ let options = [
 export class UsersService {
   constructor(
     @InjectModel(User.name) private user: Model<UserDocument>,
-    private notificationsService: NotificationsService
-  ) { }
+    private notificationsService: NotificationsService,
+  ) {}
 
   async create(createUserDto: CreateUserDto) {
     try {
@@ -118,6 +118,17 @@ export class UsersService {
     }
   }
 
+  async findBySearch(search: string) {
+    try {
+      const user = await this.user
+        .find({ name: { $regex: search, $options: 'i' } })
+        .limit(5);
+      return user;
+    } catch (error) {
+      return error.message;
+    }
+  }
+
   async findByArea(id: string) {
     try {
       const users = await this.user.find({ area: id });
@@ -147,7 +158,7 @@ export class UsersService {
   // NOTIFICATIONS
   async getNotifications(user: string) {
     try {
-      const notifications = await this.notificationsService.findAll(user)
+      const notifications = await this.notificationsService.findAll(user);
       return notifications;
     } catch (error) {
       return error.message;

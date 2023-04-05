@@ -42,6 +42,11 @@ export class DevolucionesController {
     return this.devolucionesService.findByActivity(id);
   }
 
+  @Get('/user/:id')
+  findByUser(@Param('id') id: string) {
+    return this.devolucionesService.findByUser(id);
+  }
+
   @Get('/area/:id')
   findByArea(@Param('id') id: string) {
     return this.devolucionesService.findByArea(id);

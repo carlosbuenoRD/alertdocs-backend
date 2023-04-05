@@ -16,7 +16,7 @@ export class AuthService {
     private axios: HttpService,
     private jwt: JwtService,
     @InjectModel(User.name) private users: Model<UserDocument>,
-  ) { }
+  ) {}
 
   async login(createAuthDto: CreateAuthDto) {
     try {
@@ -34,7 +34,7 @@ export class AuthService {
       }
       if (!user) throw new Error('No puedes ingresar al sistema');
 
-      let token: any = await this.jwt.sign({ id: user.id });
+      let token: any = await this.jwt.sign({ _id: user._id });
 
       return {
         name: user.name,

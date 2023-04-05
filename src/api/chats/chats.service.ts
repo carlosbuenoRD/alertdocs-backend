@@ -12,17 +12,17 @@ import { UpdateChatDto } from './dto/update-chat.dto';
 
 @Injectable()
 export class ChatsService {
+  constructor(
+    @InjectModel(Chats.name) private Chat: Model<ChatDocument>,
+    @InjectModel(User.name) private User: Model<UserDocument>,
+  ) {}
 
-  constructor(@InjectModel(Chats.name) private Chat: Model<ChatDocument>,
-    @InjectModel(User.name) private User: Model<UserDocument>
-  ) { }
-
-  accessChat = async (req, res) => {
-    const { userId } = req.body
+  async accessChat(req) {
+    const { userId } = req.body;
 
     try {
       if (!userId) {
-        throw new Error('No user chat selected')
+        throw new Error('No user chat selected');
       }
 
       let isChat: any = await this.Chat.find({
@@ -33,35 +33,35 @@ export class ChatsService {
         ],
       })
         .populate('users', '-password')
-        .populate('latestMessage')
+        .populate('latestMessage');
 
       isChat = await this.User.populate(isChat, {
         path: 'lastestMessage.sender',
         select: 'name pic email',
-      })
+      });
 
       if (isChat.length > 0) {
+        return isChat[0];
       } else {
         const newChat = await this.Chat.create({
           chatName: 'sender',
           isGroupChat: false,
           users: [req.user._id, userId],
-        })
+        });
 
         const fullchat = await this.Chat.findById(newChat._id).populate(
           'users',
-          '-password'
-        )
+          '-password',
+        );
 
-        return fullchat
+        return fullchat;
       }
     } catch (error) {
       throw new Error(error.message);
-
     }
   }
 
-  getAllChats = async (req, res) => {
+  async getAllChats(req) {
     try {
       const Chats = await this.Chat.find({
         users: { $elemMatch: { $eq: req.user._id } },
@@ -69,30 +69,28 @@ export class ChatsService {
         .populate('users', '-password')
         .populate('groupAdmin', '-password')
         .populate('latestMessage')
-        .sort({ updatedAt: -1 })
+        .sort({ updatedAt: -1 });
 
       let chats = await this.User.populate(Chats, {
         path: 'latestMessage.sender',
         select: 'name pic email',
-      })
+      });
 
-      return chats
-
+      return chats;
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
-  createGroupChat = async (req, res) => {
-    let { users, name } = req.body
-
-    console.log(users, 1)
+  async createGroupChat(req) {
+    let { users, name } = req.body;
 
     if (!users || !name) {
     }
 
-    users.push(req.user._id)
-    console.log(users, 2)
+    if (!users.find((u) => u === req.user._id)) {
+      users.push(req.user._id);
+    }
 
     if (users.length <= 2) {
       throw new Error('More than 2 users are required to form a group chat!');
@@ -104,22 +102,20 @@ export class ChatsService {
         users,
         isGroupChat: true,
         groupAdmin: req.user._id,
-      })
+      });
 
       let fullGroupChat = await this.Chat.findById(createdGroup._id)
         .populate('users', '-password')
-        .populate('groupAdmin', '-password')
+        .populate('groupAdmin', '-password');
 
-      return fullGroupChat
-
+      return fullGroupChat;
     } catch (error) {
       throw new Error(error.message);
-
     }
   }
 
-  renameGroupChat = async (req, res) => {
-    const { chatId, name } = req.body
+  async renameGroupChat(req) {
+    const { chatId, name } = req.body;
 
     if (!name) {
     }
@@ -131,25 +127,23 @@ export class ChatsService {
         },
         {
           new: true,
-        }
+        },
       )
         .populate('users', '-password')
-        .populate('groupAdmin', '-password')
+        .populate('groupAdmin', '-password');
 
       if (!updatedGroup) {
-        throw new Error('Chat group dosent exist')
+        throw new Error('Chat group dosent exist');
       }
 
-      return updatedGroup
-
+      return updatedGroup;
     } catch (error) {
       throw new Error(error.message);
-
     }
   }
 
-  removeToGroup = async (req, res) => {
-    const { chatId, userId } = req.body
+  async removeFromGroup(req) {
+    const { chatId, userId } = req.body;
 
     try {
       const removed = await this.Chat.findByIdAndUpdate(
@@ -159,24 +153,23 @@ export class ChatsService {
         },
         {
           new: true,
-        }
+        },
       )
         .populate('users', '-password')
-        .populate('groupAdmin', '-password')
+        .populate('groupAdmin', '-password');
 
       if (!removed) {
-        throw new Error('Chat not found!')
+        throw new Error('Chat not found!');
       }
 
-      return removed
+      return removed;
     } catch (error) {
       throw new Error(error.message);
-
     }
   }
 
-  addToGroup = async (req, res) => {
-    const { chatId, userId } = req.body
+  async addToGroup(req) {
+    const { chatId, userId } = req.body;
 
     try {
       const added = await this.Chat.findByIdAndUpdate(
@@ -186,19 +179,18 @@ export class ChatsService {
         },
         {
           new: true,
-        }
+        },
       )
         .populate('users', '-password')
-        .populate('groupAdmin', '-password')
+        .populate('groupAdmin', '-password');
 
       if (!added) {
-        throw new Error('Chat not found!')
+        throw new Error('Chat not found!');
       }
 
-      return added
+      return added;
     } catch (error) {
       throw new Error(error.message);
-
     }
   }
 }

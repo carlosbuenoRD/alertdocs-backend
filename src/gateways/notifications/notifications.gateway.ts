@@ -34,7 +34,7 @@ export class NotificationsGateway {
 
   @SubscribeMessage('setup')
   handleSetup(@ConnectedSocket() client: Socket, @MessageBody() user: string) {
-    console.log('Setup user: ', user);
+    console.log('NOTIFY USER CONNECTED: ', user);
     client.join(user);
   }
 
@@ -97,7 +97,7 @@ export class NotificationsGateway {
       );
       this.server.in(document.participants).emit('notify created document');
     } catch (error) {
-      console.log(error.message, 'NOTIYF CREATE DOCUMENT');
+      console.log(error.message, 'NOTIFY CREATE DOCUMENT');
     }
   }
 

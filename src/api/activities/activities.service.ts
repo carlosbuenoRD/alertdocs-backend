@@ -185,6 +185,22 @@ export class ActivitiesService {
 
       activity.state = state;
 
+      // Looking for next activity in document
+      const nextActivity = await this.activities.findOne({
+        documentId: activity.documentId,
+        step: activity.step + 1,
+      });
+
+      if (state === 'progress') {
+        if (nextActivity) {
+          // Changing next activity state
+          nextActivity.state = StateEnum.proximo;
+
+          // Saving changes of next activity
+          await nextActivity.save();
+        }
+      }
+
       if (state === 'revision') {
         // Changing current activity state
         activity.endedAt = Date.now();
@@ -192,12 +208,6 @@ export class ActivitiesService {
 
         //Handling report data
         await this.reports.handleActivityReport(activity);
-
-        // Looking for next activity in document
-        const nextActivity = await this.activities.findOne({
-          documentId: activity.documentId,
-          step: activity.step + 1,
-        });
 
         if (nextActivity) {
           // Changing next activity state

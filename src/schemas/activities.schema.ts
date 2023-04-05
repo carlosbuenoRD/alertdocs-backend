@@ -10,6 +10,7 @@ import { Flujo } from './flujos.schema';
 
 export enum StateEnum {
   'pending' = 'pending',
+  'proximo' = 'proximo',
   'ready' = 'ready',
   'progress' = 'progress',
   'revision' = 'revision',

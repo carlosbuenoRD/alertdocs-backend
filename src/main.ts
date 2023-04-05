@@ -12,7 +12,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   // BAD PRACTICE USED IT JUST FOR DEVELOPEMENT PORPUSE
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+  // process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
   // SWAGGER
   const config = new DocumentBuilder()
