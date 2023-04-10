@@ -15,6 +15,9 @@ export class CreateDocumentDto {
   participants: [string];
 
   @ApiProperty()
+  subprocess: string;
+
+  @ApiProperty()
   activities: [IActivitiesDocument];
 
   @ApiProperty()

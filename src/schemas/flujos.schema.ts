@@ -12,6 +12,9 @@ export class Flujo {
   @Prop()
   description: string;
 
+  @Prop()
+  descriptions: string[];
+
   @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: Areas.name }])
   areas: Areas[];
 

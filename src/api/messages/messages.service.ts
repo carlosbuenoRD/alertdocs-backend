@@ -14,14 +14,12 @@ import { UpdateMessageDto } from './dto/update-message.dto';
 @Injectable()
 export class MessagesService {
   constructor(
-    @InjectModel(Message.name) private messages,
-    @InjectModel(Chats.name) private chats,
+    @InjectModel(Message.name) private messages: Model<MessageDocument>,
+    @InjectModel(Chats.name) private chats: Model<ChatDocument>,
     @InjectModel(User.name) private users,
   ) {}
 
   async createMessage(req) {
-    console.log(req.body);
-
     try {
       const newMessage = {
         sender: req.user._id,
@@ -52,9 +50,11 @@ export class MessagesService {
     try {
       const messages = await this.messages
         .find({ chat: req.params.id })
+        .sort({ createdAt: -1 })
+        .limit(30)
         .populate('sender', 'name pic');
 
-      return messages;
+      return messages?.reverse();
     } catch (error) {
       console.log('GET MESSAGES ERROR: ', error.message);
       throw new Error(error.message);

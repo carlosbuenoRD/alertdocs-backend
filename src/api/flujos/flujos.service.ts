@@ -14,7 +14,6 @@ export class FlujosService {
   constructor(@InjectModel(Flujo.name) private flujos: Model<FlujoDocument>) {}
 
   async create(createFlujoDto: CreateFlujoDto) {
-    console.log(createFlujoDto);
     try {
       const createdFlujo = await this.flujos.create(createFlujoDto);
       return createdFlujo;

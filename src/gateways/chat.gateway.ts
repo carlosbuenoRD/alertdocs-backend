@@ -1,5 +1,3 @@
-import { Activity } from '@/schemas/activities.schema';
-import { Document } from '@/schemas/documents.schema';
 import {
   ConnectedSocket,
   MessageBody,
@@ -12,7 +10,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
-@WebSocketGateway(1082, {
+@WebSocketGateway(+process.env.CHAT_PORT || 1082, {
   cors: {
     origin: '*',
   },

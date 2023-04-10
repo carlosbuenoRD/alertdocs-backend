@@ -21,7 +21,7 @@ export class DocumentsService {
     @InjectModel(Document.name) private documents: Model<DocumentsDoc>,
     private activityService: ActivitiesService,
     private reportService: ReportsService,
-  ) { }
+  ) {}
 
   // CREATE A DOCUMENT
   async create(createDocumentDto: CreateDocumentDto) {
@@ -35,6 +35,7 @@ export class DocumentsService {
         areas: createDocumentDto.areas,
         direcciones: createDocumentDto.direcciones,
         departments: createDocumentDto.departments,
+        subprocess: createDocumentDto.subprocess,
       });
 
       let createdActivities = [];
@@ -60,7 +61,7 @@ export class DocumentsService {
 
       // Saving activities in the document
       // await this.updateActivities(createdDocument._id, createdActivities);
-      return createdDocument
+      return createdDocument;
     } catch (error) {
       console.log(error.message, 'DOCUMENT: create');
       return error.message;

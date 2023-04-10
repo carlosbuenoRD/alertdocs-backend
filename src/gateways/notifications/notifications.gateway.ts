@@ -10,7 +10,7 @@ import { Server, Socket } from 'socket.io';
 
 import { NotificationsService } from './notifications.service';
 
-@WebSocketGateway(1081, {
+@WebSocketGateway(+process.env.NOTIFICATION_PORT || 1081, {
   cors: {
     origin: '*',
   },

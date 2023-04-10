@@ -30,6 +30,9 @@ export class Document {
   @Prop()
   description: string;
 
+  @Prop()
+  subprocess: string;
+
   @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: User.name }])
   participants: User[];
 

@@ -12,7 +12,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
-@WebSocketGateway(1080, {
+@WebSocketGateway(+process.env.KANBA_PORT || 1080, {
   cors: {
     origin: '*',
   },
