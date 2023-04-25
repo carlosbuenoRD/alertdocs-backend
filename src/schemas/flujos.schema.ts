@@ -10,6 +10,9 @@ export type FlujoDocument = HydratedDocument<Flujo>;
 @Schema()
 export class Flujo {
   @Prop()
+  type: string;
+
+  @Prop()
   description: string;
 
   @Prop()

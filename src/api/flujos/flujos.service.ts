@@ -54,6 +54,7 @@ export class FlujosService {
       // CHanging values
       flujo.description = updateFlujoDto.description;
       flujo.activitiesSchema = updateFlujoDto.activitiesSchema;
+      flujo.type = updateFlujoDto.type;
 
       // Saving changes
       await flujo.save();

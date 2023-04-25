@@ -8,6 +8,12 @@ import { User } from '@/schemas/users.schema';
 import { Activity } from '@/schemas/activities.schema';
 import { Files } from './files.schema';
 
+export interface ClientProps {
+  name: string;
+  cedula_rnc: string;
+  concepto: string;
+}
+
 export type DocumentsDoc = HydratedDocument<Document>;
 
 @Schema({ timestamps: true })
@@ -52,6 +58,9 @@ export class Document {
 
   @Prop()
   endedAt: number;
+
+  @Prop()
+  clients: ClientProps[];
 }
 
 export const DocumentsSchema = SchemaFactory.createForClass(Document);

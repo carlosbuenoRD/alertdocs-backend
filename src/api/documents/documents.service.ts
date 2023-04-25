@@ -36,6 +36,7 @@ export class DocumentsService {
         direcciones: createDocumentDto.direcciones,
         departments: createDocumentDto.departments,
         subprocess: createDocumentDto.subprocess,
+        clients: createDocumentDto.clients,
       });
 
       let createdActivities = [];

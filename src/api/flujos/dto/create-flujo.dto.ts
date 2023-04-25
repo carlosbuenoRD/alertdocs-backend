@@ -6,6 +6,9 @@ export class CreateFlujoDto {
   description: string;
 
   @ApiProperty()
+  type: string;
+
+  @ApiProperty()
   descriptions: string[];
 
   @ApiProperty()

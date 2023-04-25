@@ -1,4 +1,5 @@
 import { IActivitiesDocument } from '@/interfaces/activities.interface';
+import { ClientProps } from '@/schemas/documents.schema';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateDocumentDto {
@@ -33,8 +34,11 @@ export class CreateDocumentDto {
   departments: [string];
 
   @ApiProperty()
-  startedAt: Date;
+  startedAt: number;
 
   @ApiProperty()
-  endedAt: Date;
+  endedAt: number;
+
+  @ApiProperty()
+  clients: ClientProps[];
 }
