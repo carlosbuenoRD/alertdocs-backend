@@ -1,11 +1,13 @@
 import { Schema, SchemaFactory, Prop } from '@nestjs/mongoose';
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document as Doc } from 'mongoose';
 
 // Models
 import { User } from './users.schema';
 import { Activity } from './activities.schema';
+import { Flujo } from './flujos.schema';
+import { Document } from './documents.schema';
 
-export type DevolucionDoc = Devolucion & Document;
+export type DevolucionDoc = Devolucion & Doc;
 
 @Schema({ timestamps: true })
 export class Devolucion {
@@ -20,6 +22,12 @@ export class Devolucion {
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
   userTo: User;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Flujo.name })
+  flujo: Flujo;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Document.name })
+  document: Document;
 
   @Prop()
   comment: string;

@@ -115,7 +115,7 @@ export class DevolucionesService {
     }
   }
 
-  // By Area
+  // By Direccion
   async findByDireccion(id: string) {
     try {
       const devolucion = await this.devolucion
@@ -130,11 +130,26 @@ export class DevolucionesService {
     }
   }
 
-  // By Area
+  // By Department
   async findByDepartment(id: string) {
     try {
       const devolucion = await this.devolucion
         .find({ department: id })
+        .populate('activityTo')
+        .populate('userTo')
+        .populate('activityFrom')
+        .populate('userFrom');
+      return devolucion;
+    } catch (error) {
+      return error.message;
+    }
+  }
+
+  // By flujo
+  async findByFlujo(id: string) {
+    try {
+      const devolucion = await this.devolucion
+        .find({ flujo: id })
         .populate('activityTo')
         .populate('userTo')
         .populate('activityFrom')

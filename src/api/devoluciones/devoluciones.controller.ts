@@ -62,6 +62,11 @@ export class DevolucionesController {
     return this.devolucionesService.findByDepartment(id);
   }
 
+  @Get('/flujo/:id')
+  findByFlujo(@Param('id') id: string) {
+    return this.devolucionesService.findByFlujo(id);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.devolucionesService.findOne(id);
