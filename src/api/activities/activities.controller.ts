@@ -10,6 +10,7 @@ import { ApiTags } from '@nestjs/swagger';
 
 // Services
 import { ActivitiesService } from './activities.service';
+import { UpdateActivityDto } from './dto/update-activity.dto';
 
 @ApiTags('Activities')
 @Controller('activities')
@@ -21,9 +22,19 @@ export class ActivitiesController {
     return this.activitiesService.findAll();
   }
 
+  @Patch('/user/:id')
+  update(@Param('id') id: string, @Body() body: UpdateActivityDto) {
+    return this.activitiesService.update(id, body);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.activitiesService.findOne(id);
+  }
+
+  @Get('count/:id')
+  getUserActivitiesCount(@Param('id') id: string) {
+    return this.activitiesService.getUserActivitiesCount(id);
   }
 
   @Get('myactivity/:id')

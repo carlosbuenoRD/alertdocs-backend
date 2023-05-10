@@ -12,7 +12,6 @@ import { ActivitiesService } from '../activities/activities.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { UpdateDocumentDto } from './dto/update-document.dto';
 import { IActivitiesDocument } from '@/interfaces/activities.interface';
-import { Activity } from '@/schemas/activities.schema';
 import { ReportsService } from '../reports/reports.service';
 
 @Injectable()
@@ -31,6 +30,7 @@ export class DocumentsService {
         description: createDocumentDto.description,
         libramiento: createDocumentDto.libramiento,
         participants: createDocumentDto.participants,
+        activities: createDocumentDto.activities,
         transcode: createDocumentDto.transcode,
         areas: createDocumentDto.areas,
         direcciones: createDocumentDto.direcciones,
@@ -69,6 +69,17 @@ export class DocumentsService {
     }
   }
 
+  // UPDATE DOCUMENT
+  async update(id: string, body: UpdateDocumentDto) {
+    try {
+      const document = await this.documents.findByIdAndUpdate(id, body);
+      return document;
+    } catch (error) {
+      console.log(error.message, 'DOCUMENT: find all');
+      return error.message;
+    }
+  }
+
   // FIND ALL DOCUMENTS
   async findAll() {
     try {
@@ -83,9 +94,10 @@ export class DocumentsService {
   // FIND BY ID
   async findOne(id: string) {
     try {
-      const document = await this.documents
+      let document = await this.documents
         .findById(id)
-        .populate('participants');
+        .populate('participants')
+        .populate('activities.usersId');
       return document;
     } catch (error) {
       console.log(error.message, 'DOCUMENT: find one');
@@ -140,8 +152,9 @@ export class DocumentsService {
   // FIND COMPLETED BY AREA
   async findCompletedByArea(id: string) {
     try {
+      // endedAt: { $exists: true }
       const documents = await this.documents
-        .find({ areas: { $in: id }, endedAt: { $exists: true } })
+        .find({ areas: { $in: id } })
         .populate('participants');
 
       return documents;
@@ -156,7 +169,6 @@ export class DocumentsService {
     try {
       const documents = await this.documents.find({
         direcciones: { $in: id },
-        endedAt: { $exists: true },
       });
 
       return documents;
@@ -171,7 +183,6 @@ export class DocumentsService {
     try {
       const documents = await this.documents.find({
         departments: { $in: id },
-        endedAt: { $exists: true },
       });
 
       return documents;

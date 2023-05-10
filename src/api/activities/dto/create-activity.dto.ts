@@ -1,1 +1,4 @@
-export class CreateActivityDto {}
+export class CreateActivityDto {
+  usersId;
+  step;
+}

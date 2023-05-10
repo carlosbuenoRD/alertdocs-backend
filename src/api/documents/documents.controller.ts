@@ -90,7 +90,7 @@ export class DocumentsController {
     }
   }
 
-  @Get('completed//department/:id')
+  @Get('completed/department/:id')
   async findCompletedByDepartment(@Param('id') id: string) {
     try {
       return await this.documentsService.findCompletedByDepartment(id);
@@ -99,13 +99,13 @@ export class DocumentsController {
     }
   }
 
-  // @Patch(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateDocumentDto: UpdateDocumentDto,
-  // ) {
-  //   return this.documentsService.update(+id, updateDocumentDto);
-  // }
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateDocumentDto: UpdateDocumentDto,
+  ) {
+    return this.documentsService.update(id, updateDocumentDto);
+  }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

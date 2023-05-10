@@ -13,6 +13,7 @@ import { Document, DocumentsDoc } from '@/schemas/documents.schema';
 // INTERFACE
 import { IActivitiesDocument } from '@/interfaces/activities.interface';
 import { ReportsService } from '../reports/reports.service';
+import { UpdateActivityDto } from './dto/update-activity.dto';
 
 @Injectable()
 export class ActivitiesService {
@@ -256,6 +257,34 @@ export class ActivitiesService {
     return await activity.save();
   }
 
+  async getUserActivitiesCount(user: string) {
+    let start = new Date(new Date(new Date().setDate(1))).setHours(0, 0, 0, 0);
+    let end = new Date(new Date(new Date().setDate(30))).setHours(
+      23,
+      59,
+      59,
+      59,
+    );
+
+    try {
+      return await this.activities
+        .find({
+          usersId: user,
+          endedAt: {
+            $gte: start,
+            $lt: end,
+          },
+        })
+        .count();
+    } catch (error) {
+      console.log(error.message, 'ACTIVITY document&area');
+      return error.message;
+    }
+  }
+
+  async update(id: string, updateActivityDto: UpdateActivityDto) {
+    return await this.activities.findByIdAndUpdate(id, updateActivityDto);
+  }
   // async isLastActivity(activity: Activity): Promise<boolean> {
   //   try {
   //     const answer = await this.activities.findOne({
@@ -287,10 +316,6 @@ export class ActivitiesService {
   //   let activity = await this.activities.findById(info.activityId);
   //   activity.history.push({ ...info, createdAt: new Date() });
   //   return await activity.save();
-  // }
-
-  // async update(id: string, updateActivityDto: UpdateActivityDto) {
-  //   return await this.activity.findByIdAndUpdate(id, updateActivityDto);
   // }
 
   // async remove(id: string) {

@@ -1,4 +1,4 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { HydratedDocument } from 'mongoose';
 
@@ -42,10 +42,20 @@ export class Document {
   @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: User.name }])
   participants: User[];
 
-  @Prop([
-    { type: mongoose.Schema.Types.ObjectId, ref: 'Activity', default: [] },
-  ])
-  activities: Activity[];
+  @Prop(
+    raw([
+      {
+        areaId: { type: String },
+        direccionId: { type: String },
+        departmentId: { type: String },
+        description: { type: String },
+        hours: { type: Number },
+        step: { type: Number },
+        usersId: [{ type: mongoose.Schema.Types.ObjectId, ref: User.name }],
+      },
+    ]),
+  )
+  activities: Record<string, any>;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Flujo.name })
   flujoId: Flujo;

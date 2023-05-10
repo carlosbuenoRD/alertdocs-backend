@@ -70,6 +70,31 @@ export class DevolucionesService {
     }
   }
 
+  async getUserDevolucionesCount(user: string) {
+    let start = new Date(new Date(new Date().setDate(1))).setHours(0, 0, 0, 0);
+    let end = new Date(new Date(new Date().setDate(30))).setHours(
+      23,
+      59,
+      59,
+      59,
+    );
+
+    try {
+      return await this.devolucion
+        .find({
+          userTo: user,
+          endedAt: {
+            $gte: start,
+            $lt: end,
+          },
+        })
+        .count();
+    } catch (error) {
+      console.log(error.message, 'ACTIVITY document&area');
+      return error.message;
+    }
+  }
+
   // By User
   async findByUser(id: string) {
     try {

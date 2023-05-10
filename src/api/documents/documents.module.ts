@@ -5,6 +5,7 @@ import { ActivitiesModule } from '../activities/activities.module';
 // Schema
 import { Document, DocumentsSchema } from '@/schemas/documents.schema';
 import { Activity, ActivitySchema } from '@/schemas/activities.schema';
+import { User, UserSchema } from '@/schemas/users.schema';
 
 // CONTROLLER
 import { DocumentsService } from './documents.service';
@@ -16,6 +17,7 @@ import { ReportsModule } from '../reports/reports.module';
     MongooseModule.forFeature([
       { name: Document.name, schema: DocumentsSchema },
       { name: Activity.name, schema: ActivitySchema },
+      { name: User.name, schema: UserSchema },
     ]),
     ActivitiesModule,
     ReportsModule,
