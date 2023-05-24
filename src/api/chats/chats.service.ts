@@ -93,6 +93,7 @@ export class ChatsService {
     }
 
     if (users.length <= 2) {
+      return;
       throw new Error('More than 2 users are required to form a group chat!');
     }
 

@@ -104,6 +104,24 @@ export class UsersController {
     }
   }
 
+  @Get('/notifications/config/settings')
+  async findNotificationSettings() {
+    try {
+      return await this.usersService.getNotificationSettings();
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @Patch('/notifications/config/settings')
+  async updateNotificationSetting(@Body() settings) {
+    try {
+      return await this.usersService.updateNotificationSettings(settings);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);

@@ -5,10 +5,74 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 import { Server, Socket } from 'socket.io';
+import { EmailService } from './email.service';
 
 import { NotificationsService } from './notifications.service';
+
+import {
+  NotificationSetting,
+  NotificationSettingDocument,
+} from '@/schemas/notificationSettings.schema';
+export const notificationSettings = [
+  {
+    name: 'general',
+    options: [
+      {
+        name: 'Documento creado',
+        message: 'Has sido agregado a un documento mantente alerta a tu turno.',
+        keep: false,
+        email: false,
+      },
+      {
+        name: 'Es tu turno',
+        message:
+          'Tu tarea esta lista para empezar, terminala lo mas rapido posible!',
+        keep: false,
+        email: false,
+      },
+      {
+        name: 'Eres el siguiente',
+        message:
+          'Tu tarea es las siguiente mantente alerta, terminala lo mas rapido posible!',
+        keep: false,
+        email: false,
+      },
+    ],
+  },
+  {
+    name: 'devoluciones',
+    options: [
+      {
+        name: 'Recibida',
+        message:
+          'Has recibido una devolucion, terminala lo mas rapido posible!',
+        keep: false,
+        email: false,
+      },
+      {
+        name: 'Entregada',
+        message: 'Tu devolucion fue regresada, continua con tu actividad!',
+        keep: false,
+        email: false,
+      },
+    ],
+  },
+  {
+    name: 'alertas',
+    options: [
+      {
+        name: 'Documento retrasado',
+        message: 'Un documento esta retrasado, verifica que todo este bien  ',
+        keep: false,
+        email: false,
+      },
+    ],
+  },
+];
 
 @WebSocketGateway(+process.env.NOTIFICATION_PORT || 1081, {
   cors: {
@@ -16,7 +80,12 @@ import { NotificationsService } from './notifications.service';
   },
 })
 export class NotificationsGateway {
-  constructor(private readonly notificationsService: NotificationsService) {}
+  constructor(
+    private readonly notificationsService: NotificationsService,
+    private readonly mailerService: EmailService,
+    @InjectModel(NotificationSetting.name)
+    private notificationSetting: Model<NotificationSettingDocument>,
+  ) {}
 
   @WebSocketServer() server: Server;
 
@@ -35,15 +104,20 @@ export class NotificationsGateway {
   @SubscribeMessage('setup')
   handleSetup(@ConnectedSocket() client: Socket, @MessageBody() user: string) {
     console.log('NOTIFY USER CONNECTED: ', user);
+
     client.join(user);
   }
 
   @SubscribeMessage('notify upcoming activity')
-  handleUpcomingActivity(
+  async handleUpcomingActivity(
     @ConnectedSocket() client: Socket,
     @MessageBody() user: string,
   ) {
-    client.in(user).emit('upcoming activity');
+    let setting = await this.notificationSetting.findOne({ name: 'general' });
+    if (setting.options[2].email) {
+      this.mailerService.sendMail(setting.options[2].message);
+    }
+    client.in(user).emit('upcoming activity', setting.options[2]);
   }
 
   @SubscribeMessage('notify ready activity')
@@ -56,7 +130,11 @@ export class NotificationsGateway {
       message: 'Tu actividad esta lista para empezar',
       from: 'me',
     });
-    client.in(user).emit('ready activity');
+    let setting = await this.notificationSetting.findOne({ name: 'general' });
+    if (setting.options[1].email) {
+      this.mailerService.sendMail(setting.options[1].message);
+    }
+    client.in(user).emit('ready activity', setting.options[1]);
   }
 
   @SubscribeMessage('notify devolucion created')
@@ -69,7 +147,13 @@ export class NotificationsGateway {
       message: 'Has recibido una devolucion',
       from: 'me',
     });
-    client.in(user).emit('devolucion created');
+    let setting = await this.notificationSetting.findOne({
+      name: 'devoluciones',
+    });
+    if (setting.options[0].email) {
+      this.mailerService.sendMail(setting.options[0].message);
+    }
+    client.in(user).emit('devolucion created', setting.options[0]);
   }
 
   @SubscribeMessage('notify devolucion ended')
@@ -82,7 +166,13 @@ export class NotificationsGateway {
       message: 'Devolucion terminada puedes continuar',
       from: 'me',
     });
-    client.in(user).emit('devolucion ended');
+    let setting = await this.notificationSetting.findOne({
+      name: 'devoluciones',
+    });
+    if (setting.options[1].email) {
+      this.mailerService.sendMail(setting.options[1].message);
+    }
+    client.in(user).emit('devolucion ended', setting.options[1]);
   }
 
   @SubscribeMessage('create document')
@@ -90,12 +180,18 @@ export class NotificationsGateway {
     @ConnectedSocket() client: Socket,
     @MessageBody() document,
   ) {
-    this.server.emit('created document');
     try {
+      let setting = await this.notificationSetting.findOne({ name: 'general' });
+      if (setting.options[0].email) {
+        this.mailerService.sendMail(setting.options[0].message);
+      }
+      this.server.emit('created document');
       await this.notificationsService.addDocumentParticipants(
         document.participants,
       );
-      this.server.in(document.participants).emit('notify created document');
+      this.server
+        .in(document.participants)
+        .emit('notify created document', setting.options[0]);
     } catch (error) {
       console.log(error.message, 'NOTIFY CREATE DOCUMENT');
     }

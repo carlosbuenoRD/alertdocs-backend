@@ -2,6 +2,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { MailerModule } from '@nestjs-modules/mailer';
 import { join } from 'path';
 
 // API MODULES
@@ -39,6 +40,16 @@ let CLUSTER =
     MongooseModule.forRoot(process.env.MONGO_URL || CLUSTER),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
+    }),
+    MailerModule.forRoot({
+      transport: {
+        host: 'smtp.gmail.com',
+        port: 465,
+        auth: {
+          user: 'buenoct2001@gmail.com',
+          pass: 'zpadokkbknofcwbb',
+        },
+      },
     }),
     UsersModule,
     AreasModule,

@@ -5,6 +5,10 @@ import { HttpService } from '@nestjs/axios';
 // DB MODEL
 import { Model } from 'mongoose';
 import { User, UserDocument } from '@/schemas/users.schema';
+import {
+  NotificationSetting,
+  NotificationSettingDocument,
+} from '@/schemas/notificationSettings.schema';
 
 // DTOS
 import { CreateUserDto } from './dto/create-user.dto';
@@ -49,6 +53,8 @@ export class UsersService {
   constructor(
     @InjectModel(User.name) private user: Model<UserDocument>,
     private notificationsService: NotificationsService,
+    @InjectModel(NotificationSetting.name)
+    private notificationSetting: Model<NotificationSettingDocument>,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -160,6 +166,25 @@ export class UsersService {
     try {
       const notifications = await this.notificationsService.findAll(user);
       return notifications;
+    } catch (error) {
+      return error.message;
+    }
+  }
+
+  async getNotificationSettings() {
+    try {
+      const notifications = await this.notificationSetting.find();
+      return notifications;
+    } catch (error) {
+      return error.message;
+    }
+  }
+
+  async updateNotificationSettings(settings: any) {
+    try {
+      settings.map(async (i) => {
+        await this.notificationSetting.findByIdAndUpdate(i._id, i);
+      });
     } catch (error) {
       return error.message;
     }

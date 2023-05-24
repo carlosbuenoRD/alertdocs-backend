@@ -6,6 +6,10 @@ import { NotificationsModule } from '@/gateways/notifications/notifications.modu
 
 // Schema
 import { User, UserSchema } from '@/schemas/users.schema';
+import {
+  NotificationSetting,
+  NotificationSettingSchema,
+} from '@/schemas/notificationSettings.schema';
 
 // Controller
 import { UsersController } from './users.controller';
@@ -13,11 +17,14 @@ import { UsersService } from './users.service';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema },
+      { name: NotificationSetting.name, schema: NotificationSettingSchema },
+    ]),
     HttpModule,
-    NotificationsModule
+    NotificationsModule,
   ],
   controllers: [UsersController],
   providers: [UsersService],
 })
-export class UsersModule { }
+export class UsersModule {}
