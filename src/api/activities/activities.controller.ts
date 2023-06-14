@@ -15,7 +15,7 @@ import { UpdateActivityDto } from './dto/update-activity.dto';
 @ApiTags('Activities')
 @Controller('activities')
 export class ActivitiesController {
-  constructor(private readonly activitiesService: ActivitiesService) {}
+  constructor(private readonly activitiesService: ActivitiesService) { }
 
   @Get()
   findAll() {
@@ -25,6 +25,11 @@ export class ActivitiesController {
   @Patch('/user/:id')
   update(@Param('id') id: string, @Body() body: UpdateActivityDto) {
     return this.activitiesService.update(id, body);
+  }
+
+  @Patch()
+  updateActivities(@Body() body: any) {
+    return this.activitiesService.updateActivities(body);
   }
 
   @Get(':id')

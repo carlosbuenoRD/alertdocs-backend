@@ -14,6 +14,7 @@ import { Document, DocumentsDoc } from '@/schemas/documents.schema';
 import { IActivitiesDocument } from '@/interfaces/activities.interface';
 import { ReportsService } from '../reports/reports.service';
 import { UpdateActivityDto } from './dto/update-activity.dto';
+import { IActivity } from './entities/activity.entity';
 
 @Injectable()
 export class ActivitiesService {
@@ -21,20 +22,11 @@ export class ActivitiesService {
     @InjectModel(Activity.name) private activities: Model<ActivityDocument>,
     @InjectModel(Document.name) private documents: Model<DocumentsDoc>,
     private reports: ReportsService,
-  ) {}
+  ) { }
 
-  async create(
-    activity: IActivitiesDocument,
-    documentId: any,
-    flujoId: string,
-  ) {
+  async create(activities) {
     try {
-      const createdActivity = await this.activities.create({
-        ...activity,
-        usersId: activity.usersId[0],
-        documentId,
-        flujoId,
-      });
+      const createdActivity = await this.activities.create(activities);
       return createdActivity;
     } catch (error) {
       console.log(error.message, 'ACTIVITY create');
@@ -44,6 +36,17 @@ export class ActivitiesService {
 
   async findAll() {
     return await this.activities.find();
+  }
+
+  async updateActivities(activities: IActivity[]) {
+    try {
+      activities.forEach(async (item) => {
+        await this.activities.findByIdAndUpdate(item._id, { description: item.description, hours: item.hours })
+      })
+    } catch (error) {
+      console.log(error.message, 'ACTIVITY UPDATE');
+      return error.message;
+    }
   }
 
   async findOneActivity(id: string) {

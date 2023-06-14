@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { HttpService } from '@nestjs/axios';
 
 // DB MODEL
 import { Model } from 'mongoose';
@@ -55,7 +54,7 @@ export class UsersService {
     private notificationsService: NotificationsService,
     @InjectModel(NotificationSetting.name)
     private notificationSetting: Model<NotificationSettingDocument>,
-  ) {}
+  ) { }
 
   async create(createUserDto: CreateUserDto) {
     try {
@@ -173,6 +172,55 @@ export class UsersService {
 
   async getNotificationSettings() {
     try {
+      // await this.notificationSetting.create([{
+      //   name: "general",
+      //   options: [
+      //     {
+      //       name: "Documento creado",
+      //       message: "Has sido agregado a un documento mantente alerta a tu turno.",
+      //       keep: true,
+      //       email: true
+      //     },
+      //     {
+      //       name: "Es tu turno",
+      //       message: "Tu tarea esta lista para empezar, terminala lo mas rapido posible!",
+      //       keep: false,
+      //       email: false
+      //     },
+      //     {
+      //       name: "Eres el siguiente",
+      //       message: "Tu tarea es las siguiente mantente alerta, terminala lo mas rapido posible!",
+      //       keep: false,
+      //       email: false
+      //     }
+      //   ]
+      // }, {
+      //   name: "devoluciones",
+      //   options: [
+      //     {
+      //       name: "Recibida",
+      //       message: "Has recibido una devolucion, terminala lo mas rapido posible!",
+      //       keep: false,
+      //       email: false
+      //     },
+      //     {
+      //       name: "Entregada",
+      //       message: "Tu devolucion fue regresada, continua con tu actividad!",
+      //       keep: true,
+      //       email: false
+      //     }
+      //   ]
+      // }, {
+      //   name: "alertas",
+      //   options: [
+      //     {
+      //       name: "Documento retrasado",
+      //       message: "Un documento esta retrasado, verifica que todo este bien  ",
+      //       keep: false,
+      //       email: false
+      //     }
+      //   ]
+      // }])
       const notifications = await this.notificationSetting.find();
       return notifications;
     } catch (error) {

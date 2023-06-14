@@ -21,7 +21,7 @@ import { CreateDevolucioneDto } from './dto/create-devolucione.dto';
 @ApiTags('Devoluciones')
 @Controller('devoluciones')
 export class DevolucionesController {
-  constructor(private readonly devolucionesService: DevolucionesService) {}
+  constructor(private readonly devolucionesService: DevolucionesService) { }
 
   @Post()
   async create(@Body() createDevolucioneDto: CreateDevolucioneDto) {
@@ -65,6 +65,11 @@ export class DevolucionesController {
   @Get('/department/:id')
   findByDepartment(@Param('id') id: string) {
     return this.devolucionesService.findByDepartment(id);
+  }
+
+  @Get('/all/in-process')
+  findInProcess() {
+    return this.devolucionesService.findInProcess();
   }
 
   @Get('/flujo/:id')

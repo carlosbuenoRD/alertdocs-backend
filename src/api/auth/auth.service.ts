@@ -16,7 +16,7 @@ export class AuthService {
     private axios: HttpService,
     private jwt: JwtService,
     @InjectModel(User.name) private users: Model<UserDocument>,
-  ) {}
+  ) { }
 
   async login(createAuthDto: CreateAuthDto) {
     try {
@@ -39,8 +39,8 @@ export class AuthService {
       return {
         name: user.name,
         _id: user._id,
-        isAdmin: true,
         token,
+        role: 'monitor'
       };
     } catch (error) {
       console.log(error.message);

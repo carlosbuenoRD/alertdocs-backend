@@ -21,7 +21,7 @@ export class DevolucionesService {
     @InjectModel(Devolucion.name) private devolucion: Model<DevolucionDoc>,
     @InjectModel(Activity.name) private activity: Model<ActivityDocument>,
     private reports: ReportsService,
-  ) {}
+  ) { }
 
   async create(createDevolucioneDto: CreateDevolucioneDto) {
     try {
@@ -69,6 +69,19 @@ export class DevolucionesService {
       return error.message;
     }
   }
+
+  async findInProcess() {
+    try {
+      const devoluciones = await this.devolucion
+        .find({ endedAt: { $exists: false } })
+
+      return devoluciones;
+    } catch (error) {
+      console.log(error.message, 'DEVOLUCIONES: IN PROCESS');
+      return error.message;
+    }
+  }
+
 
   async getUserDevolucionesCount(user: string) {
     let start = new Date(new Date(new Date().setDate(1))).setHours(0, 0, 0, 0);

@@ -19,7 +19,7 @@ export class CreateDocumentDto {
   subprocess: string;
 
   @ApiProperty()
-  activities: any;
+  activities: IActivitiesDocument[];
 
   @ApiProperty()
   flujoId: string;

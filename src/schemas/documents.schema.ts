@@ -7,6 +7,7 @@ import { Flujo } from '@/schemas/flujos.schema';
 import { User } from '@/schemas/users.schema';
 import { Activity } from '@/schemas/activities.schema';
 import { Files } from './files.schema';
+import { Areas } from './areas.schema';
 
 export interface ClientProps {
   name: string;
@@ -21,8 +22,8 @@ export class Document {
   @Prop()
   transcode: string;
 
-  @Prop()
-  areas: [string];
+  @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: Areas.name }])
+  areas: Areas[];
 
   @Prop()
   direcciones: [string];
@@ -43,19 +44,9 @@ export class Document {
   participants: User[];
 
   @Prop(
-    raw([
-      {
-        areaId: { type: String },
-        direccionId: { type: String },
-        departmentId: { type: String },
-        description: { type: String },
-        hours: { type: Number },
-        step: { type: Number },
-        usersId: [{ type: mongoose.Schema.Types.ObjectId, ref: User.name }],
-      },
-    ]),
+    [{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }]
   )
-  activities: Record<string, any>;
+  activities: Activity[];
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Flujo.name })
   flujoId: Flujo;

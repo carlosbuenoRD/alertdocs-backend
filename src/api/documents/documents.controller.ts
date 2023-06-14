@@ -2,35 +2,42 @@ import {
   Controller,
   Get,
   Post,
+  Query,
   Body,
   Patch,
   Param,
   Delete,
   HttpException,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { DocumentsService } from './documents.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { UpdateDocumentDto } from './dto/update-document.dto';
+import { QuerieDocument } from './dto/queries-document.dto';
+import { JwtAuthGuard } from '../auth/jwt.guard';
 
 @ApiTags('Documents')
 @Controller('documents')
 export class DocumentsController {
-  constructor(private readonly documentsService: DocumentsService) {}
+  constructor(private readonly documentsService: DocumentsService) { }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Body() createDocumentDto: CreateDocumentDto) {
+  async create(@Body() createDocumentDto: CreateDocumentDto, @Req() request) {
     try {
-      return await this.documentsService.create(createDocumentDto);
+      return await this.documentsService.create(createDocumentDto, request.user._id);
     } catch (error) {
-      throw new HttpException(error.message, 500);
+      return new HttpException(error.message, 500);
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
-  async findAll() {
+  async findAll(@Query() queries: QuerieDocument, @Req() request) {
     try {
-      return await this.documentsService.findAll();
+      return await this.documentsService.findAll(queries);
     } catch (error) {
       throw new HttpException(error.message, 500);
     }
@@ -40,6 +47,15 @@ export class DocumentsController {
   async findOne(@Param('id') id: string) {
     try {
       return await this.documentsService.findOne(id);
+    } catch (error) {
+      throw new HttpException(error.message, 500);
+    }
+  }
+
+  @Get('/all/in-process')
+  async findInProcess() {
+    try {
+      return await this.documentsService.findInProcess();
     } catch (error) {
       throw new HttpException(error.message, 500);
     }

@@ -30,10 +30,11 @@ import { NotificationsModule } from './gateways/notifications/notifications.modu
 import { ChatsModule } from './api/chats/chats.module';
 import { ChatGateway } from './gateways/chat.gateway';
 import { MessagesModule } from './api/messages/messages.module';
+import { ConfigurationModule } from './api/configuration/configuration.module';
 
 let CLUSTER =
-  // 'mongodb+srv://bloodysi:bloodysi@atlascluster.fohieyx.mongodb.net/?retryWrites=true&w=majority';
-  'mongodb://localhost:27017/alertdocs';
+  'mongodb+srv://bloodysi:bloodysi@atlascluster.fohieyx.mongodb.net/?retryWrites=true&w=majority';
+// 'mongodb://localhost:27017/alertdocs';
 
 @Module({
   imports: [
@@ -65,8 +66,9 @@ let CLUSTER =
     NotificationsModule,
     ChatsModule,
     MessagesModule,
+    ConfigurationModule,
   ],
   controllers: [AppController],
   providers: [AppService, KanbaGateway, ChatGateway],
 })
-export class AppModule {}
+export class AppModule { }

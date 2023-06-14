@@ -28,7 +28,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
@@ -107,6 +107,7 @@ export class UsersController {
   @Get('/notifications/config/settings')
   async findNotificationSettings() {
     try {
+
       return await this.usersService.getNotificationSettings();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);

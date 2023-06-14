@@ -11,6 +11,7 @@ import { User, UserSchema } from '@/schemas/users.schema';
 import { DocumentsService } from './documents.service';
 import { DocumentsController } from './documents.controller';
 import { ReportsModule } from '../reports/reports.module';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
@@ -21,8 +22,9 @@ import { ReportsModule } from '../reports/reports.module';
     ]),
     ActivitiesModule,
     ReportsModule,
+    UsersModule
   ],
   controllers: [DocumentsController],
   providers: [DocumentsService],
 })
-export class DocumentsModule {}
+export class DocumentsModule { }
