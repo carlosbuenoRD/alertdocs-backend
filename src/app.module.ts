@@ -71,4 +71,4 @@ let CLUSTER =
   controllers: [AppController],
   providers: [AppService, KanbaGateway, ChatGateway],
 })
-export class AppModule { }
+export class AppModule {}

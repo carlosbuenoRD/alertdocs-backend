@@ -15,6 +15,7 @@ import { IActivitiesDocument } from '@/interfaces/activities.interface';
 import { ReportsService } from '../reports/reports.service';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 import { IActivity } from './entities/activity.entity';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class ActivitiesService {
@@ -22,7 +23,7 @@ export class ActivitiesService {
     @InjectModel(Activity.name) private activities: Model<ActivityDocument>,
     @InjectModel(Document.name) private documents: Model<DocumentsDoc>,
     private reports: ReportsService,
-  ) { }
+  ) {}
 
   async create(activities) {
     try {
@@ -41,8 +42,11 @@ export class ActivitiesService {
   async updateActivities(activities: IActivity[]) {
     try {
       activities.forEach(async (item) => {
-        await this.activities.findByIdAndUpdate(item._id, { description: item.description, hours: item.hours })
-      })
+        await this.activities.findByIdAndUpdate(item._id, {
+          description: item.description,
+          hours: item.hours,
+        });
+      });
     } catch (error) {
       console.log(error.message, 'ACTIVITY UPDATE');
       return error.message;
@@ -288,6 +292,38 @@ export class ActivitiesService {
   async update(id: string, updateActivityDto: UpdateActivityDto) {
     return await this.activities.findByIdAndUpdate(id, updateActivityDto);
   }
+
+  async selectUserByWorkLoad(users: User[]) {
+    console.log('Select user Users', users);
+    try {
+      let curr: any = {};
+      for (let i = 0; i < users.length; i++) {
+        let activities = await this.activities.find({
+          usersId: users[i]._id,
+          endedAt: { $exists: false },
+        });
+
+        console.log(users[i].name, activities.length);
+        console.log('FOR USER', users[i]);
+        console.log('FOR INDEX', i);
+
+        if (i > 0) {
+          if (activities.length < curr?.qty) {
+            curr.qty = activities.length;
+            curr.index = i;
+          }
+        } else {
+          curr.qty = activities.length;
+          curr.index = i;
+        }
+      }
+      console.log('SELECTED USER', users[curr.index]);
+      return users[curr.index]?._id;
+    } catch (error) {
+      return error.message;
+    }
+  }
+
   // async isLastActivity(activity: Activity): Promise<boolean> {
   //   try {
   //     const answer = await this.activities.findOne({
