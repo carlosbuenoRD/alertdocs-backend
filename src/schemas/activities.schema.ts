@@ -54,6 +54,12 @@ export class Activity {
   @Prop()
   continueByDevolucion: number;
 
+  @Prop()
+  pauseByEndDay: number;
+
+  @Prop()
+  continueByStartDay: number;
+
   @Prop({ default: 0 })
   devolucionTime: number;
 

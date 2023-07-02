@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
+const cron = require('node-cron');
+
 // Schema
 import {
   Activity,
@@ -11,11 +13,10 @@ import {
 import { Document, DocumentsDoc } from '@/schemas/documents.schema';
 
 // INTERFACE
-import { IActivitiesDocument } from '@/interfaces/activities.interface';
 import { ReportsService } from '../reports/reports.service';
+import { User } from '../users/entities/user.entity';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 import { IActivity } from './entities/activity.entity';
-import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class ActivitiesService {
@@ -23,7 +24,33 @@ export class ActivitiesService {
     @InjectModel(Activity.name) private activities: Model<ActivityDocument>,
     @InjectModel(Document.name) private documents: Model<DocumentsDoc>,
     private reports: ReportsService,
-  ) {}
+  ) {
+    cron.schedule('26 16 * * *', async () => {
+      try {
+        await this.activities.updateMany(
+          { endedAt: { $exists: false } },
+          { pauseByEndDay: Date.now() },
+        );
+
+        console.log('ALL TASKS HAVE BEEN PAUSED');
+      } catch (error: any) {
+        console.log(error.message);
+      }
+    });
+
+    cron.schedule('30 9 * * 1-5', async () => {
+      try {
+        await this.activities.updateMany(
+          { pauseByEndDay: { $exists: true } },
+          { continueByStartDay: Date.now() },
+        );
+
+        console.log('ALL TASKS HAVE BEEN PAUSED');
+      } catch (error: any) {
+        console.log(error.message);
+      }
+    });
+  }
 
   async create(activities) {
     try {

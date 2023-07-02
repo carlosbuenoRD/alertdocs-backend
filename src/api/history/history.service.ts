@@ -10,7 +10,6 @@ import { History, HistoryDocument } from '@/schemas/history.schema';
 
 // DTOS
 import { CreateHistoryDto } from './dto/create-history.dto';
-import { UpdateHistoryDto } from './dto/update-history.dto';
 
 @Injectable()
 export class HistoryService {
@@ -69,10 +68,10 @@ export class HistoryService {
   async findByActivity(id) {
     try {
       const activity = await this.activityService.findOne(id);
-
+      console.log(activity);
       const histories = await this.history
         .find({
-          documentId: id,
+          documentId: activity.documentId,
           step: { $lt: activity.step + 1 },
         })
         .sort({ step: -1 });
