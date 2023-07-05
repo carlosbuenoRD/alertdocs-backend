@@ -95,6 +95,18 @@ export class UsersController {
     }
   }
 
+
+  @Patch('/:id')
+  async updateUser(@Param('id') id: string, @Body() data) {
+    try {
+      return await this.usersService.updateUser(id, data);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // Notifications
+
   @Get('/notifications/:id')
   async findNotifications(@Param('id') id: string) {
     try {

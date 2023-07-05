@@ -31,6 +31,7 @@ import { ChatsModule } from './api/chats/chats.module';
 import { ChatGateway } from './gateways/chat.gateway';
 import { MessagesModule } from './api/messages/messages.module';
 import { ConfigurationModule } from './api/configuration/configuration.module';
+import { SolicitudesModule } from './api/solicitudes/solicitudes.module';
 
 let CLUSTER =
   'mongodb+srv://bloodysi:bloodysi@atlascluster.fohieyx.mongodb.net/?retryWrites=true&w=majority';
@@ -67,8 +68,9 @@ let CLUSTER =
     ChatsModule,
     MessagesModule,
     ConfigurationModule,
+    SolicitudesModule,
   ],
   controllers: [AppController],
   providers: [AppService, KanbaGateway, ChatGateway],
 })
-export class AppModule {}
+export class AppModule { }

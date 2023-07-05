@@ -54,7 +54,7 @@ export class UsersService {
     private notificationsService: NotificationsService,
     @InjectModel(NotificationSetting.name)
     private notificationSetting: Model<NotificationSettingDocument>,
-  ) {}
+  ) { }
 
   async create(createUserDto: CreateUserDto) {
     try {
@@ -160,6 +160,16 @@ export class UsersService {
     }
   }
 
+  async updateUser(id: string, data: { active: boolean, role: string, isAdmin: boolean }) {
+    console.log(id)
+    try {
+      const users = await this.user.findByIdAndUpdate(id, data);
+      return users;
+    } catch (error) {
+      return error.message;
+    }
+  }
+
   // NOTIFICATIONS
   async getNotifications(user: string) {
     try {
@@ -188,6 +198,7 @@ export class UsersService {
       return error.message;
     }
   }
+
 
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;

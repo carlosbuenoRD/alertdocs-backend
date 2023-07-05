@@ -26,8 +26,11 @@ export class User {
   @Prop({ default: true })
   active: boolean;
 
-  @Prop({ default: 0 })
-  isAdmin: number;
+  @Prop({ default: 'ninguno' })
+  role: string;
+
+  @Prop({ default: false })
+  isAdmin: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

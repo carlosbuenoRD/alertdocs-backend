@@ -16,7 +16,7 @@ export class AuthService {
     private axios: HttpService,
     private jwt: JwtService,
     @InjectModel(User.name) private users: Model<UserDocument>,
-  ) {}
+  ) { }
 
   async login(createAuthDto: CreateAuthDto) {
     try {
@@ -28,10 +28,10 @@ export class AuthService {
       let userObj: any = {};
       if (createAuthDto.password === '1') {
         user = await this.users.findById('63cfd48a7fa2e7a5ae2d4ac6');
-        userObj.isAdmin = true;
+
       } else if (createAuthDto.password === '2') {
         user = await this.users.findById('63cfd48a7fa2e7a5ae2d49f4');
-        userObj.role = 'monitor';
+
       } else {
         user = await this.users.findById('63cfd48a7fa2e7a5ae2d4a92');
       }
@@ -40,10 +40,8 @@ export class AuthService {
       let token: any = await this.jwt.sign({ _id: user._id });
 
       return {
-        name: user.name,
-        _id: user._id,
+        ...user,
         token,
-        ...userObj,
       };
     } catch (error) {
       console.log(error.message);
