@@ -16,7 +16,7 @@ export class AuthService {
     private axios: HttpService,
     private jwt: JwtService,
     @InjectModel(User.name) private users: Model<UserDocument>,
-  ) { }
+  ) {}
 
   async login(createAuthDto: CreateAuthDto) {
     try {
@@ -28,19 +28,17 @@ export class AuthService {
       let userObj: any = {};
       if (createAuthDto.password === '1') {
         user = await this.users.findById('63cfd48a7fa2e7a5ae2d4ac6');
-
       } else if (createAuthDto.password === '2') {
         user = await this.users.findById('63cfd48a7fa2e7a5ae2d49f4');
-
       } else {
         user = await this.users.findById('63cfd48a7fa2e7a5ae2d4a92');
       }
       if (!user) throw new Error('No puedes ingresar al sistema');
 
       let token: any = await this.jwt.sign({ _id: user._id });
-
+      console.log(user);
       return {
-        ...user,
+        ...user._doc,
         token,
       };
     } catch (error) {

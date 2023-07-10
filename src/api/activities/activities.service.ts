@@ -45,7 +45,7 @@ export class ActivitiesService {
           { continueByStartDay: Date.now() },
         );
 
-        console.log('ALL TASKS HAVE BEEN PAUSED');
+        console.log('ALL TASKS HAVE BEEN RESUME');
       } catch (error: any) {
         console.log(error.message);
       }

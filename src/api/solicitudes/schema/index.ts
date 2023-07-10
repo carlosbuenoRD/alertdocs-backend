@@ -22,8 +22,8 @@ export class Solicitudes {
   @Prop()
   justification: string;
 
-  @Prop()
-  state: string;
+  @Prop({ default: false })
+  state: boolean;
 }
 
 export const SolicitudeSchema = SchemaFactory.createForClass(Solicitudes);

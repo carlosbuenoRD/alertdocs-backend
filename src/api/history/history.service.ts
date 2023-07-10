@@ -10,6 +10,7 @@ import { History, HistoryDocument } from '@/schemas/history.schema';
 
 // DTOS
 import { CreateHistoryDto } from './dto/create-history.dto';
+import { UpdateHistoryDto } from './dto/update-history.dto';
 
 @Injectable()
 export class HistoryService {
