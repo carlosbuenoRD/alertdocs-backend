@@ -100,7 +100,11 @@ export class DocumentsService {
   // UPDATE DOCUMENT
   async update(id: string, body: UpdateDocumentDto) {
     try {
-      const document = await this.documents.findByIdAndUpdate(id, body);
+      const document = await this.documents.findByIdAndUpdate(id, {
+        ...body, activities: body.activities.map((i: any) => i._id)
+      });
+      await this.activityService.updateActivitiesByDocument(body.activities)
+
       return document;
     } catch (error) {
       console.log(error.message, 'DOCUMENT: find all');

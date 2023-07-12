@@ -1,3 +1,4 @@
+import { CreateDocumentDto } from '@/api/documents/dto/create-document.dto';
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
@@ -24,6 +25,9 @@ export class Solicitudes {
 
   @Prop()
   state: boolean;
+
+  @Prop()
+  modify: CreateDocumentDto;
 }
 
 export const SolicitudeSchema = SchemaFactory.createForClass(Solicitudes);

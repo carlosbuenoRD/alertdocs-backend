@@ -359,6 +359,19 @@ export class ActivitiesService {
       console.log('ERROR DELETING DOCUMENT ACTIVITIES', error.message)
     }
   }
+  async updateActivitiesByDocument(activities: IActivity[]) {
+    try {
+      for (let index = 0; index < activities.length; index++) {
+        const element = activities[index];
+
+        await this.activities.findByIdAndUpdate(element._id, element)
+
+      }
+      console.log(`UPDATE ACTIVITIES FROM DOCUMENT!`)
+    } catch (error: any) {
+      console.log('ERROR DELETING DOCUMENT ACTIVITIES', error.message)
+    }
+  }
 
   // async isLastActivity(activity: Activity): Promise<boolean> {
   //   try {
