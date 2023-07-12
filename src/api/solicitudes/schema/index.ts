@@ -22,7 +22,7 @@ export class Solicitudes {
   @Prop()
   justification: string;
 
-  @Prop({ default: false })
+  @Prop()
   state: boolean;
 }
 

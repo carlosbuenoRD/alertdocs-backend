@@ -13,7 +13,7 @@ export class SolicitudesService {
   constructor(
     @InjectModel(Solicitudes.name)
     private solicitudes: Model<SolicitudesDocument>,
-  ) {}
+  ) { }
 
   async create(createSolicitudeDto: CreateSolicitudeDto) {
     try {
@@ -29,9 +29,12 @@ export class SolicitudesService {
     }
   }
 
-  async findAll() {
+  async findAll(query: any) {
+
+    const { active } = query
+
     try {
-      const solicitudes = await this.solicitudes.find();
+      const solicitudes = await this.solicitudes.find({ state: { $exists: false } });
       return solicitudes;
     } catch (error) {
       console.log('FIND SOLICITUD', error.message);
@@ -42,6 +45,16 @@ export class SolicitudesService {
   async findOne(id: string) {
     try {
       const solicitud = await this.solicitudes.findById(id);
+      return solicitud;
+    } catch (error) {
+      console.log('FIND ID SOLICITUD', error.message);
+      return error.message;
+    }
+  }
+
+  async changeState(id: string, state: boolean) {
+    try {
+      const solicitud = await this.solicitudes.findByIdAndUpdate(id, { state });
       return solicitud;
     } catch (error) {
       console.log('FIND ID SOLICITUD', error.message);

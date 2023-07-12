@@ -351,6 +351,15 @@ export class ActivitiesService {
     }
   }
 
+  async deleteActivitiesByDocument(id: string) {
+    try {
+      await this.activities.deleteMany({ documentId: id })
+      console.log(`ACTIVITIES FROM DOCUMENT ${id.toUpperCase()} DELETED!`)
+    } catch (error: any) {
+      console.log('ERROR DELETING DOCUMENT ACTIVITIES', error.message)
+    }
+  }
+
   // async isLastActivity(activity: Activity): Promise<boolean> {
   //   try {
   //     const answer = await this.activities.findOne({

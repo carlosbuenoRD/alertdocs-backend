@@ -25,7 +25,7 @@ export class DocumentsService {
     private activityService: ActivitiesService,
     private reportService: ReportsService,
     private userService: UsersService,
-  ) {}
+  ) { }
 
   // CREATE A DOCUMENT
   async create(createDocumentDto: CreateDocumentDto, user?: any) {
@@ -268,6 +268,7 @@ export class DocumentsService {
   async remove(id: string) {
     try {
       const document = await this.documents.findByIdAndDelete(id);
+      await this.activityService.deleteActivitiesByDocument(id)
       return document;
     } catch (error) {
       console.log(error.message, 'DOCUMENT: remove');
