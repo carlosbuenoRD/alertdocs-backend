@@ -353,23 +353,23 @@ export class ActivitiesService {
 
   async deleteActivitiesByDocument(id: string) {
     try {
-      await this.activities.deleteMany({ documentId: id })
-      console.log(`ACTIVITIES FROM DOCUMENT ${id.toUpperCase()} DELETED!`)
+      await this.activities.deleteMany({ documentId: id });
+      console.log(`ACTIVITIES FROM DOCUMENT ${id.toUpperCase()} DELETED!`);
     } catch (error: any) {
-      console.log('ERROR DELETING DOCUMENT ACTIVITIES', error.message)
+      console.log('ERROR DELETING DOCUMENT ACTIVITIES', error.message);
     }
   }
   async updateActivitiesByDocument(activities: IActivity[]) {
+    console.log('UPDATE ACTIVITIES', activities);
     try {
       for (let index = 0; index < activities.length; index++) {
         const element = activities[index];
 
-        await this.activities.findByIdAndUpdate(element._id, element)
-
+        await this.activities.findByIdAndUpdate(element._id, element);
       }
-      console.log(`UPDATE ACTIVITIES FROM DOCUMENT!`)
+      console.log(`UPDATE ACTIVITIES FROM DOCUMENT!`);
     } catch (error: any) {
-      console.log('ERROR DELETING DOCUMENT ACTIVITIES', error.message)
+      console.log('ERROR DELETING DOCUMENT ACTIVITIES', error.message);
     }
   }
 

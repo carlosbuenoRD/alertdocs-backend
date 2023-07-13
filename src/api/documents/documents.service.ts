@@ -25,7 +25,7 @@ export class DocumentsService {
     private activityService: ActivitiesService,
     private reportService: ReportsService,
     private userService: UsersService,
-  ) { }
+  ) {}
 
   // CREATE A DOCUMENT
   async create(createDocumentDto: CreateDocumentDto, user?: any) {
@@ -101,11 +101,13 @@ export class DocumentsService {
   async update(id: string, body: UpdateDocumentDto) {
     try {
       const document = await this.documents.findByIdAndUpdate(id, {
-        ...body, activities: body.activities.map((i: any) => i._id)
+        ...body,
+        activities: body.activities.map((i: any) => i._id),
       });
-      await this.activityService.updateActivitiesByDocument(body.activities)
 
-      return document;
+      await this.activityService.updateActivitiesByDocument(body.activities);
+
+      return await this.findOne(document._id.toString());
     } catch (error) {
       console.log(error.message, 'DOCUMENT: find all');
       return error.message;
@@ -258,7 +260,7 @@ export class DocumentsService {
 
   async updateActivities(id: any, activities: any) {
     try {
-      console.log(activities);
+      console.log('add document activities', activities);
       let updatedDocument = await this.documents.findByIdAndUpdate(id, {
         activities,
       });
@@ -272,7 +274,7 @@ export class DocumentsService {
   async remove(id: string) {
     try {
       const document = await this.documents.findByIdAndDelete(id);
-      await this.activityService.deleteActivitiesByDocument(id)
+      await this.activityService.deleteActivitiesByDocument(id);
       return document;
     } catch (error) {
       console.log(error.message, 'DOCUMENT: remove');
