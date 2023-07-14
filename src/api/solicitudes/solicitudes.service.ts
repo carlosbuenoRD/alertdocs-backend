@@ -34,7 +34,7 @@ export class SolicitudesService {
     const { active } = query
 
     try {
-      const solicitudes = await this.solicitudes.find({ state: { $exists: false } });
+      const solicitudes = await this.solicitudes.find({ state: { $exists: false } }).populate('userId', 'name _id');
       return solicitudes;
     } catch (error) {
       console.log('FIND SOLICITUD', error.message);
@@ -58,6 +58,16 @@ export class SolicitudesService {
       return solicitud;
     } catch (error) {
       console.log('FIND ID SOLICITUD', error.message);
+      return error.message;
+    }
+  }
+
+  async deleteByEntity(id: string) {
+    try {
+      await this.solicitudes.deleteMany({ state: { $exists: false }, entityId: id });
+
+    } catch (error) {
+      console.log('DELETE MANY ENTITY', error.message);
       return error.message;
     }
   }

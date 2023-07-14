@@ -1,6 +1,7 @@
 import { CreateDocumentDto } from '@/api/documents/dto/create-document.dto';
+import { User } from '@/schemas/users.schema';
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 
 // Models
 
@@ -17,8 +18,8 @@ export class Solicitudes {
   @Prop()
   entityId: string;
 
-  @Prop()
-  userId: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
+  userId: User;
 
   @Prop()
   justification: string;

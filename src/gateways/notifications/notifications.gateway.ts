@@ -62,6 +62,18 @@ export const notificationSettings = [
     ],
   },
   {
+    name: 'Monitor',
+    options: [
+      {
+        name: 'Creada',
+        message:
+          'Has recibido una solicitud!',
+        keep: false,
+        email: false,
+      },
+    ],
+  },
+  {
     name: 'alertas',
     options: [
       {
@@ -85,7 +97,7 @@ export class NotificationsGateway {
     private readonly mailerService: EmailService,
     @InjectModel(NotificationSetting.name)
     private notificationSetting: Model<NotificationSettingDocument>,
-  ) {}
+  ) { }
 
   @WebSocketServer() server: Server;
 
@@ -102,9 +114,12 @@ export class NotificationsGateway {
   }
 
   @SubscribeMessage('setup')
-  handleSetup(@ConnectedSocket() client: Socket, @MessageBody() user: string) {
+  async handleSetup(@ConnectedSocket() client: Socket, @MessageBody() user: string) {
     console.log('NOTIFY USER CONNECTED: ', user);
 
+    // Change notification settings
+    // await this.notificationSetting.deleteMany({})
+    // await this.notificationSetting.create(notificationSettings)
     client.join(user);
   }
 
@@ -194,6 +209,27 @@ export class NotificationsGateway {
         .emit('notify created document', setting.options[0]);
     } catch (error) {
       console.log(error.message, 'NOTIFY CREATE DOCUMENT');
+    }
+  }
+
+  @SubscribeMessage('create solicitud')
+  async handleCreateSolicitud(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() user: string,
+  ) {
+    try {
+      let setting = await this.notificationSetting.findOne({ name: 'Monitor' });
+      if (setting.options[0].email) {
+        this.mailerService.sendMail(setting.options[0].message);
+      }
+      this.server.emit('created solicitud');
+      await this.notificationsService.create({
+        user,
+        message: setting.options[0].message,
+        from: 'me',
+      });
+    } catch (error) {
+      console.log(error.message, 'NOTIFY CREATE SOLICITUD');
     }
   }
 

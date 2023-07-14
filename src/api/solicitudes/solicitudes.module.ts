@@ -13,6 +13,7 @@ import { SolicitudesController } from './solicitudes.controller';
     MongooseModule.forFeature([{ name: Solicitudes.name, schema: SolicitudeSchema }])
   ],
   controllers: [SolicitudesController],
-  providers: [SolicitudesService]
+  providers: [SolicitudesService],
+  exports: [SolicitudesService]
 })
 export class SolicitudesModule { }

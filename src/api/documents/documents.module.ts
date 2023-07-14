@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ActivitiesModule } from '../activities/activities.module';
+import { SolicitudesModule } from '../solicitudes/solicitudes.module';
 
 // Schema
 import { Document, DocumentsSchema } from '@/schemas/documents.schema';
@@ -22,7 +23,8 @@ import { UsersModule } from '../users/users.module';
     ]),
     ActivitiesModule,
     ReportsModule,
-    UsersModule
+    UsersModule,
+    SolicitudesModule
   ],
   controllers: [DocumentsController],
   providers: [DocumentsService],

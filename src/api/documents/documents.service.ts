@@ -9,13 +9,13 @@ import { Document, DocumentsDoc } from '@/schemas/documents.schema';
 import { ActivitiesService } from '../activities/activities.service';
 
 // DTOS
-import { CreateDocumentDto } from './dto/create-document.dto';
-import { UpdateDocumentDto } from './dto/update-document.dto';
-import { IActivitiesDocument } from '@/interfaces/activities.interface';
-import { ReportsService } from '../reports/reports.service';
 import { User, UserDocument } from '@/schemas/users.schema';
-import { QuerieDocument } from './dto/queries-document.dto';
+import { ReportsService } from '../reports/reports.service';
+import { SolicitudesService } from '../solicitudes/solicitudes.service';
 import { UsersService } from '../users/users.service';
+import { CreateDocumentDto } from './dto/create-document.dto';
+import { QuerieDocument } from './dto/queries-document.dto';
+import { UpdateDocumentDto } from './dto/update-document.dto';
 
 @Injectable()
 export class DocumentsService {
@@ -23,9 +23,10 @@ export class DocumentsService {
     @InjectModel(Document.name) private documents: Model<DocumentsDoc>,
     @InjectModel(User.name) private users: Model<UserDocument>,
     private activityService: ActivitiesService,
+    private solicitudesService: SolicitudesService,
     private reportService: ReportsService,
     private userService: UsersService,
-  ) {}
+  ) { }
 
   // CREATE A DOCUMENT
   async create(createDocumentDto: CreateDocumentDto, user?: any) {
@@ -275,6 +276,7 @@ export class DocumentsService {
     try {
       const document = await this.documents.findByIdAndDelete(id);
       await this.activityService.deleteActivitiesByDocument(id);
+      await this.solicitudesService.deleteByEntity(id)
       return document;
     } catch (error) {
       console.log(error.message, 'DOCUMENT: remove');
