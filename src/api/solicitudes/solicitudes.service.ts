@@ -31,10 +31,15 @@ export class SolicitudesService {
 
   async findAll(query: any) {
 
-    const { active } = query
+    const { active, type } = query
+
+    let queryDb: any = {}
+
+    if (active && active !== 'Todos') queryDb.state = { $exists: active === 'Activos' ? false : true }
+    if (type) queryDb.type = { $in: type.toLowerCase()?.split(',') }
 
     try {
-      const solicitudes = await this.solicitudes.find({ state: { $exists: false } }).populate('userId', 'name _id');
+      const solicitudes = await this.solicitudes.find({ ...queryDb }).populate('userId', 'name _id');
       return solicitudes;
     } catch (error) {
       console.log('FIND SOLICITUD', error.message);
@@ -52,9 +57,19 @@ export class SolicitudesService {
     }
   }
 
-  async changeState(id: string, state: boolean) {
+  async findByMonitor(id: string) {
     try {
-      const solicitud = await this.solicitudes.findByIdAndUpdate(id, { state });
+      const solicitudes = await this.solicitudes.find({ acceptedBy: id });
+      return solicitudes;
+    } catch (error) {
+      console.log('FIND BY MONITOR SOLICITUD', error.message);
+      return error.message;
+    }
+  }
+
+  async changeState(id: string, data: { state: boolean, acceptedBy: string }) {
+    try {
+      const solicitud = await this.solicitudes.findByIdAndUpdate(id, { state: data.state, acceptedBy: data.acceptedBy });
       return solicitud;
     } catch (error) {
       console.log('FIND ID SOLICITUD', error.message);

@@ -6,9 +6,11 @@ export class CreateHistoryDto {
   @ApiProperty()
   action: string;
   @ApiProperty()
-  activityId: string;
+  activityId?: string;
   @ApiProperty()
-  documentId: string;
+  documentId?: string;
   @ApiProperty()
-  step: number;
+  step?: number;
+  @ApiProperty()
+  solicitudId?: string;
 }

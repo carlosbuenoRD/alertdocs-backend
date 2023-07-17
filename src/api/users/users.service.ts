@@ -114,6 +114,15 @@ export class UsersService {
     }
   }
 
+  async findMonitors() {
+    try {
+      const user = await this.user.find({ role: 'monitor' });
+      return user;
+    } catch (error) {
+      return error.message;
+    }
+  }
+
   async findById(id: string) {
     try {
       const user = await this.user.findById(id);

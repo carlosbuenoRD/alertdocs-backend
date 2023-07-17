@@ -41,10 +41,17 @@ export class UsersController {
 
   @Get()
   async findAll(@Request() req) {
-    console.log('User: ', req.user);
-
     try {
       return await this.usersService.findAll();
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @Get('/monitors')
+  async findMonitors() {
+    try {
+      return await this.usersService.findMonitors();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }

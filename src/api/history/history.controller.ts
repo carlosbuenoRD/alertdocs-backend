@@ -10,7 +10,7 @@ import { CreateHistoryDto } from './dto/create-history.dto';
 @ApiTags('History')
 @Controller('history')
 export class HistoryController {
-  constructor(private readonly historyService: HistoryService) {}
+  constructor(private readonly historyService: HistoryService) { }
 
   @Post()
   create(@Body() createHistoryDto: CreateHistoryDto) {
@@ -26,4 +26,15 @@ export class HistoryController {
   findByActivity(@Param('id') id: string) {
     return this.historyService.findByActivity(id);
   }
+
+  @Post('/solicitud')
+  createSolicitud(@Body() createHistoryDto: CreateHistoryDto) {
+    return this.historyService.createSolicitudHistory(createHistoryDto);
+  }
+
+  @Get('/solicitud/:id')
+  findBySolicitud(@Param('id') id: string) {
+    return this.historyService.findBySolicitud(id);
+  }
+
 }

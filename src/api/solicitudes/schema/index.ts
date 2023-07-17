@@ -21,6 +21,9 @@ export class Solicitudes {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
   userId: User;
 
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
+  acceptedBy: User;
+
   @Prop()
   justification: string;
 

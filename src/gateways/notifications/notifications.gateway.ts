@@ -123,6 +123,7 @@ export class NotificationsGateway {
     client.join(user);
   }
 
+  // ACTIVITY
   @SubscribeMessage('notify upcoming activity')
   async handleUpcomingActivity(
     @ConnectedSocket() client: Socket,
@@ -152,6 +153,26 @@ export class NotificationsGateway {
     client.in(user).emit('ready activity', setting.options[1]);
   }
 
+  @SubscribeMessage('notify late activity')
+  async handleLateActivity(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() user: string,
+  ) {
+    console.log('LATE ACTIVITY')
+    await this.notificationsService.create({
+      user,
+      message: 'Tu actividad esta retrasada finalizala para no destruir tu eficiencia!',
+      from: 'me',
+    });
+    let setting = await this.notificationSetting.findOne({ name: 'general' });
+    if (setting.options[1].email) {
+      this.mailerService.sendMail(setting.options[1].message);
+    }
+    client.in(user).emit('notified late activity', setting.options[1]);
+  }
+
+
+  // DEVOLUCION
   @SubscribeMessage('notify devolucion created')
   async handleCreatedDevolucion(
     @ConnectedSocket() client: Socket,
@@ -190,6 +211,7 @@ export class NotificationsGateway {
     client.in(user).emit('devolucion ended', setting.options[1]);
   }
 
+  // DOCUMENT
   @SubscribeMessage('create document')
   async handleCreateDocument(
     @ConnectedSocket() client: Socket,
@@ -212,6 +234,7 @@ export class NotificationsGateway {
     }
   }
 
+  // SOLICITUD
   @SubscribeMessage('create solicitud')
   async handleCreateSolicitud(
     @ConnectedSocket() client: Socket,

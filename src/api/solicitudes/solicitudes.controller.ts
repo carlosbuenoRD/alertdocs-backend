@@ -43,10 +43,19 @@ export class SolicitudesController {
     }
   }
 
-  @Patch(':id')
-  changeState(@Param('id') id: string, @Query('state') state: boolean) {
+  @Get('monitor/:id')
+  findByMonitor(@Param('id') id: string) {
     try {
-      return this.solicitudesService.changeState(id, state);
+      return this.solicitudesService.findByMonitor(id);
+    } catch (error) {
+      new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @Patch(':id')
+  changeState(@Param('id') id: string, @Body() body: any) {
+    try {
+      return this.solicitudesService.changeState(id, body);
     } catch (error) {
       new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }

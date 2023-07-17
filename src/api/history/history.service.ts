@@ -7,6 +7,7 @@ import { ActivitiesService } from '../activities/activities.service';
 
 // SCHEMA
 import { History, HistoryDocument } from '@/schemas/history.schema';
+import { SolicitudHistory, SolicitudHistoryDocument } from '@/schemas/solicitudHistory.schema';
 
 // DTOS
 import { CreateHistoryDto } from './dto/create-history.dto';
@@ -16,8 +17,9 @@ import { UpdateHistoryDto } from './dto/update-history.dto';
 export class HistoryService {
   constructor(
     @InjectModel(History.name) private history: Model<HistoryDocument>,
+    @InjectModel(SolicitudHistory.name) private solicitudHistory: Model<SolicitudHistoryDocument>,
     private activityService: ActivitiesService,
-  ) {}
+  ) { }
 
   async create(createHistoryDto: CreateHistoryDto) {
     try {
@@ -69,7 +71,6 @@ export class HistoryService {
   async findByActivity(id) {
     try {
       const activity = await this.activityService.findOne(id);
-      console.log(activity);
       const histories = await this.history
         .find({
           documentId: activity.documentId,
@@ -77,8 +78,46 @@ export class HistoryService {
         })
         .sort({ step: -1 });
 
-      console.log(histories);
 
+      return histories;
+    } catch (error) {
+      console.log(error.message);
+      return error.message;
+    }
+  }
+
+  // SOLICITUD HISTORY
+
+  async createSolicitudHistory(createHistoryDto: CreateHistoryDto) {
+    try {
+      let newAction = {
+        userId: createHistoryDto.userId,
+        action: createHistoryDto.action,
+        createdAt: Date.now(),
+      };
+
+      const history = await this.solicitudHistory.findOne({ solicitudId: createHistoryDto.solicitudId });
+
+      if (!history) {
+        const createdHistory = await this.solicitudHistory.create({
+          ...createHistoryDto,
+          actions: [newAction],
+        });
+        return createdHistory;
+      } else {
+        history.actions.push(newAction);
+        await history.save();
+        return history;
+      }
+    } catch (error) {
+      console.log(error.message);
+      return error.message;
+    }
+  }
+
+  async findBySolicitud(id) {
+    try {
+      const histories = await this.solicitudHistory.find({ solicitudId: id });
       return histories;
     } catch (error) {
       console.log(error.message);
