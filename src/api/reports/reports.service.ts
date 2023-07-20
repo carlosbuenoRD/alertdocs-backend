@@ -49,7 +49,9 @@ export class ReportsService {
     try {
       let reports = await this.report
         .find(this.dateQuery)
-        .populate('areaId', 'name');
+        .populate('areaId', 'name -_id')
+        .populate('procesos.proceso', '-_id description')
+        .select('-__v -createdAt -updatedAt');
 
       return reports;
     } catch (error) {
