@@ -60,6 +60,9 @@ export class Activity {
   @Prop()
   continueByStartDay: number;
 
+  @Prop()
+  libramiento: boolean;
+
   @Prop({ default: 0 })
   devolucionTime: number;
 

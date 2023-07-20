@@ -32,6 +32,9 @@ export class IActivity {
   endedAt: number;
 
   @ApiProperty()
+  libramiento: boolean;
+
+  @ApiProperty()
   pauseByDevolucion: number;
 
   @ApiProperty()

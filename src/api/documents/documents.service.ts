@@ -26,7 +26,7 @@ export class DocumentsService {
     private solicitudesService: SolicitudesService,
     private reportService: ReportsService,
     private userService: UsersService,
-  ) { }
+  ) {}
 
   // CREATE A DOCUMENT
   async create(createDocumentDto: CreateDocumentDto, user?: any) {
@@ -100,10 +100,11 @@ export class DocumentsService {
 
   // UPDATE DOCUMENT
   async update(id: string, body: UpdateDocumentDto) {
+    console.log(body);
     try {
       const document = await this.documents.findByIdAndUpdate(id, {
         ...body,
-        activities: body.activities.map((i: any) => i._id),
+        activities: body?.activities?.map((i: any) => i._id),
       });
 
       await this.activityService.updateActivitiesByDocument(body.activities);
@@ -276,7 +277,7 @@ export class DocumentsService {
     try {
       const document = await this.documents.findByIdAndDelete(id);
       await this.activityService.deleteActivitiesByDocument(id);
-      await this.solicitudesService.deleteByEntity(id)
+      await this.solicitudesService.deleteByEntity(id);
       return document;
     } catch (error) {
       console.log(error.message, 'DOCUMENT: remove');

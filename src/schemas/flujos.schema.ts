@@ -36,6 +36,7 @@ export class Flujo {
         description: { type: String },
         hours: { type: Number },
         step: { type: Number },
+        libramiento: { type: Boolean },
         usersId: [{ type: mongoose.Schema.Types.ObjectId, ref: User.name }],
       },
     ]),
