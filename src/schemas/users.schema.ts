@@ -31,6 +31,12 @@ export class User {
 
   @Prop({ default: false })
   isAdmin: boolean;
+
+  @Prop()
+  lunchTime: string;
+
+  @Prop()
+  profileImage: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
