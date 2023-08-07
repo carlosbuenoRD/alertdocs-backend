@@ -32,14 +32,14 @@ import { ChatGateway } from './gateways/chat.gateway';
 import { MessagesModule } from './api/messages/messages.module';
 import { ConfigurationModule } from './api/configuration/configuration.module';
 import { SolicitudesModule } from './api/solicitudes/solicitudes.module';
-
-let CLUSTER =
-  'mongodb+srv://bloodysi:bloodysi@atlascluster.fohieyx.mongodb.net/?retryWrites=true&w=majority';
-// 'mongodb://localhost:27017/alertdocs';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(process.env.MONGO_URL || CLUSTER),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    MongooseModule.forRoot(process.env.MONGO_URL),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
@@ -73,4 +73,6 @@ let CLUSTER =
   controllers: [AppController],
   providers: [AppService, KanbaGateway, ChatGateway],
 })
-export class AppModule { }
+export class AppModule {}
+
+console.log(process.env.MONGO_URL);

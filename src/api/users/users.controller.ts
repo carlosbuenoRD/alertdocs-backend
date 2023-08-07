@@ -28,7 +28,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
@@ -52,6 +52,15 @@ export class UsersController {
   async findMonitors() {
     try {
       return await this.usersService.findMonitors();
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @Patch('/config/lunchtime')
+  async setLunchTime(@Body('time') time: number, @Request() req) {
+    try {
+      return await this.usersService.setLunchTime(req.user._id, time);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -102,7 +111,6 @@ export class UsersController {
     }
   }
 
-
   @Patch('/:id')
   async updateUser(@Param('id') id: string, @Body() data) {
     try {
@@ -126,7 +134,6 @@ export class UsersController {
   @Get('/notifications/config/settings')
   async findNotificationSettings() {
     try {
-
       return await this.usersService.getNotificationSettings();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);

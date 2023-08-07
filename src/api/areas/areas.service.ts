@@ -36,8 +36,8 @@ export class AreasService {
     private departments: Model<DepartmentDocument>,
   ) {}
 
-  create(createAreaDto: CreateAreaDto) {
-    return 'This action adds a new area';
+  async create(createAreaDto: CreateAreaDto) {
+    return await this.areas.create(createAreaDto);
   }
 
   async findAllAreas() {

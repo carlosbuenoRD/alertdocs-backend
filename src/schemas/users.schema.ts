@@ -33,7 +33,7 @@ export class User {
   isAdmin: boolean;
 
   @Prop()
-  lunchTime: string;
+  lunchTime: number;
 
   @Prop()
   profileImage: string;

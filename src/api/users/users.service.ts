@@ -54,7 +54,7 @@ export class UsersService {
     private notificationsService: NotificationsService,
     @InjectModel(NotificationSetting.name)
     private notificationSetting: Model<NotificationSettingDocument>,
-  ) { }
+  ) {}
 
   async create(createUserDto: CreateUserDto) {
     try {
@@ -132,6 +132,15 @@ export class UsersService {
     }
   }
 
+  async setLunchTime(user: string, time: number) {
+    try {
+      await this.user.findByIdAndUpdate(user, { lunchTime: time });
+    } catch (error) {
+      console.log('SETTING LUCHTIME', error.message);
+      return error.message;
+    }
+  }
+
   async findBySearch(search: string) {
     try {
       const user = await this.user
@@ -169,8 +178,11 @@ export class UsersService {
     }
   }
 
-  async updateUser(id: string, data: { active: boolean, role: string, isAdmin: boolean }) {
-    console.log(id)
+  async updateUser(
+    id: string,
+    data: { active: boolean; role: string; isAdmin: boolean },
+  ) {
+    console.log(id);
     try {
       const users = await this.user.findByIdAndUpdate(id, data);
       return users;
@@ -207,7 +219,6 @@ export class UsersService {
       return error.message;
     }
   }
-
 
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;

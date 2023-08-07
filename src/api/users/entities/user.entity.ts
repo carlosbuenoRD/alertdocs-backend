@@ -11,6 +11,9 @@ export class User {
   active: boolean;
 
   @ApiProperty()
+  lunchTime: number;
+
+  @ApiProperty()
   name: string;
 
   @ApiProperty()
