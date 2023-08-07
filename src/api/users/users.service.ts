@@ -134,9 +134,9 @@ export class UsersService {
 
   async setLunchTime(user: string, time: number) {
     try {
-      const usersUpdated = await this.user.findByIdAndUpdate(user, {
-        lunchTime: time,
-      });
+      const usersUpdated = await this.user.findById(user);
+      usersUpdated.lunchTime = time;
+      await usersUpdated.save();
       return usersUpdated;
     } catch (error) {
       console.log('SETTING LUCHTIME', error.message);
